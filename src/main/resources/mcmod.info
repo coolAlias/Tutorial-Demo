@@ -1,0 +1,17 @@
+[
+{
+  "modid": "tutorial",
+  "name": "Tutorial",
+  "description": "Working mod from the tutorial series on extended properties, mana bar, and custom inventory.",
+  "version": "1.7.2-1.0.0",
+  "mcversion": "1.7.2",
+  "logoFile": "",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["coolAlias"],
+  "credits": "",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
