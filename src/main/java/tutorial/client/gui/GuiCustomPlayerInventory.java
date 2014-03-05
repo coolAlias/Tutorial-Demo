@@ -13,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import tutorial.client.KeyHandler;
 import tutorial.inventory.ContainerCustomPlayer;
 import tutorial.inventory.InventoryCustomPlayer;
 import cpw.mods.fml.relauncher.Side;
@@ -37,6 +38,14 @@ public class GuiCustomPlayerInventory extends GuiContainer
 		super(new ContainerCustomPlayer(player, inventoryPlayer, inventoryCustom));
 		this.inventory = inventoryCustom;
 		// if you need the player for something later on, store it in a local variable here as well
+	}
+	
+	protected void keyTyped(char c, int keyCode) {
+		super.keyTyped(c, keyCode);
+		// 1 is the Esc key, and we made our keybinding array public and static so we can access it here
+		if (c == 1 || keyCode == KeyHandler.keys[KeyHandler.CUSTOM_INV].getKeyCode()) {
+			mc.thePlayer.closeScreen();
+		}
 	}
 
 	/**
