@@ -94,6 +94,12 @@ public final class TutorialMain
 			GameRegistry.registerItem(wizardPants, wizardPants.getUnlocalizedName());
 			GameRegistry.registerItem(wizardBoots, wizardBoots.getUnlocalizedName());
 		}
+		// we'll add recipes last, to make sure all items and blocks are ready to go
+		GameRegistry.addShapelessRecipe(new ItemStack(useMana), Items.diamond);
+		if (wizardArmorFlag) {
+			CraftingManager.getInstance().getRecipeList().add(new RecipesWizardArmorDyes());
+			RecipesAll.instance().addArmorRecipes(CraftingManager.getInstance());
+		}
 	}
 
 	@EventHandler
@@ -108,11 +114,6 @@ public final class TutorialMain
 	public void postInitialise(FMLPostInitializationEvent event) {
 		packetPipeline.postInitialise();
 		
-		// we'll add recipes last, to make sure all items and blocks are ready to go
-		GameRegistry.addShapelessRecipe(new ItemStack(useMana), Items.diamond);
-		if (wizardArmorFlag) {
-			CraftingManager.getInstance().getRecipeList().add(new RecipesWizardArmorDyes());
-			RecipesAll.instance().addArmorRecipes(CraftingManager.getInstance());
-		}
+		// this is generally a good place to modify recipes or otherwise interact with other mods
 	}
 }
