@@ -11,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import tutorial.entity.EntityThrowingRock;
+import tutorial.item.ItemMagicBag;
 import tutorial.item.ItemThrowingRock;
 import tutorial.item.ItemUseMana;
 import tutorial.item.ItemWabbajack;
@@ -45,7 +46,9 @@ public final class TutorialMain
 	private static int modGuiIndex = 0;
 
 	/** Custom GUI indices: */
-	public static final int GUI_CUSTOM_INV = modGuiIndex++;
+	public static final int
+	GUI_CUSTOM_INV = modGuiIndex++,
+	GUI_ITEM_INV = modGuiIndex++;
 
 	/** This is the starting index for all of our mod's item IDs */
 	private static int modEntityIndex = 0;
@@ -55,6 +58,7 @@ public final class TutorialMain
 
 	// MISC ITEMS
 	public static Item
+	magicBag,
 	useMana,
 	throwingRock,
 	wabbajack;
@@ -75,7 +79,9 @@ public final class TutorialMain
 		config.load();
 		wizardArmorFlag = config.get(Configuration.CATEGORY_GENERAL, "WizardArmorFlag", true).getBoolean(true);
 		config.save();
-		
+	
+		magicBag = new ItemMagicBag().setUnlocalizedName("magic_bag");
+		GameRegistry.registerItem(magicBag, magicBag.getUnlocalizedName());
 		useMana = new ItemUseMana().setUnlocalizedName("use_mana");
 		GameRegistry.registerItem(useMana, useMana.getUnlocalizedName());
 		throwingRock = new ItemThrowingRock().setUnlocalizedName("throwingRock");

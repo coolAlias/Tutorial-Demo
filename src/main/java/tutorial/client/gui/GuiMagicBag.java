@@ -13,78 +13,55 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import tutorial.client.KeyHandler;
-import tutorial.inventory.ContainerCustomPlayer;
-import tutorial.inventory.InventoryCustomPlayer;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import tutorial.inventory.ContainerMagicBag;
+import tutorial.inventory.InventoryMagicBag;
 
-@SideOnly(Side.CLIENT)
-public class GuiCustomPlayerInventory extends GuiContainer
+public class GuiMagicBag extends GuiContainer
 {
-	/** x size of the inventory window in pixels. Defined as float, passed as int */
+	/** x and y size of the inventory window in pixels. Defined as float, passed as int
+	 *  These are used for drawing the player model. */
 	private float xSize_lo;
-
-	/** y size of the inventory window in pixels. Defined as float, passed as int. */
 	private float ySize_lo;
 
-	/** Normally I use '(ModInfo.MOD_ID, "textures/...")', but it can be done this way as well */
-	private static final ResourceLocation iconLocation = new ResourceLocation("tutorial:textures/gui/custom_inventory.png");
+	/** ResourceLocation takes 2 parameters: ModId, path to texture at the location:
+	 *  "src/minecraft/assets/modid/" */
+	private static final ResourceLocation iconLocation = new ResourceLocation("tutorial:textures/gui/magic_bag.png");
 
-	/** Could use IInventory type to be more generic, but this way will save an import... */
-	private final InventoryCustomPlayer inventory;
+	/** The inventory to render on screen */
+	private final InventoryMagicBag inventory;
 
-	public GuiCustomPlayerInventory(EntityPlayer player, InventoryPlayer inventoryPlayer, InventoryCustomPlayer inventoryCustom) {
-		super(new ContainerCustomPlayer(player, inventoryPlayer, inventoryCustom));
-		this.inventory = inventoryCustom;
-		// if you need the player for something later on, store it in a local variable here as well
+	public GuiMagicBag(EntityPlayer player, InventoryPlayer inv1, InventoryMagicBag inv2)
+	{
+		super(new ContainerMagicBag(player, inv1, inv2));
+		this.inventory = inv2;
 	}
 
 	@Override
-	protected void keyTyped(char c, int keyCode) {
-		super.keyTyped(c, keyCode);
-		// 1 is the Esc key, and we made our keybinding array public and static so we can access it here
-		if (c == 1 || keyCode == KeyHandler.keys[KeyHandler.CUSTOM_INV].getKeyCode()) {
-			mc.thePlayer.closeScreen();
-		}
-	}
-
-	/**
-	 * Draws the screen and all the components in it.
-	 */
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 		xSize_lo = mouseX;
 		ySize_lo = mouseY;
 	}
 
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		// This method will simply draw inventory's name on the screen - you could do without it entirely
-		// if that's not important to you, since we are overriding the default inventory rather than
-		// creating a specific type of inventory
-
+	@Override
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		String s = inventory.hasCustomInventoryName() ? inventory.getInventoryName() : I18n.format(inventory.getInventoryName());
-		// with the name "Custom Inventory", the 'Cu' will be drawn in the first slot
-		fontRendererObj.drawString(s, xSize - fontRendererObj.getStringWidth(s), 12, 4210752);
-		// this just adds "Inventory" above the player's inventory below
-		fontRendererObj.drawString(I18n.format("container.inventory"), 80, ySize - 96, 4210752);
+		fontRendererObj.drawString(s, xSize / 2 - fontRendererObj.getStringWidth(s) / 2, 0, 4210752);
+		fontRendererObj.drawString(I18n.format("container.inventory"), 26, ySize - 96 + 4, 4210752);
 	}
 
-	/**
-	 * Draw the background layer for the GuiContainer (everything behind the items)
-	 */
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(iconLocation);
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		drawPlayerModel(guiLeft + 51, guiTop + 75, 30, guiLeft + 51 - xSize_lo, guiTop + 25 - ySize_lo, mc.thePlayer);
+		int k = (width - xSize) / 2;
+		int l = (height - ySize) / 2;
+		drawTexturedModalRect(k, l, 0, 0, xSize, ySize);
+		drawPlayerModel(k + 51, l + 75, 30, (k + 51) - xSize_lo, (l + 75 - 50) - ySize_lo, mc.thePlayer);
 	}
 
 	/**
-	 * Copied straight out of vanilla - renders the player model on screen
+	 * This renders the player model in standard inventory position
 	 */
 	public static void drawPlayerModel(int x, int y, int scale, float yaw, float pitch, EntityLivingBase entity) {
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);

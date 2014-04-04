@@ -10,8 +10,8 @@ public class ItemUseMana extends BaseModItem
 {
 	public ItemUseMana() {
 		super();
-		setMaxStackSize(1);
 		setMaxDamage(0);
+		setMaxStackSize(1);
 		setCreativeTab(CreativeTabs.tabMisc);
 	}
 
