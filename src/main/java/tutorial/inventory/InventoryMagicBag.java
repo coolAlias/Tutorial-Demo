@@ -116,7 +116,7 @@ public class InventoryMagicBag implements IInventory
 			NBTTagCompound item = items.getCompoundTagAt(i);
 			byte slot = item.getByte("Slot");
 			if (slot >= 0 && slot < getSizeInventory()) {
-				setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+				inventory[slot] = ItemStack.loadItemStackFromNBT(item);
 			}
 		}
 	}
