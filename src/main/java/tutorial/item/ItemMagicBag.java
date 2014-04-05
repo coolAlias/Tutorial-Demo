@@ -21,11 +21,6 @@ public class ItemMagicBag extends BaseModItem
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack) {
-		return 1;
-	}
-
-	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		if (!world.isRemote) {
 			if (!player.isSneaking()) {
