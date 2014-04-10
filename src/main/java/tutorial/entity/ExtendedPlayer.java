@@ -75,7 +75,12 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 	 * NOT called automatically, so you must call it yourself from LivingUpdateEvent or a TickHandler
 	 */
 	public void onUpdate() {
-		if (updateManaTimer()) { regenMana(1); }
+		// only want to update the timer and regen mana on the server:
+		if (!player.worldObj.isRemote) {
+			if (updateManaTimer()) {
+				regenMana(1);
+			}
+		}
 	}
 	
 	private boolean updateManaTimer() {
