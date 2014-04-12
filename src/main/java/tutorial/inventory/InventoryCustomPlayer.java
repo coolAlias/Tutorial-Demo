@@ -89,8 +89,9 @@ public class InventoryCustomPlayer implements IInventory
 	@Override
 	public void markDirty() {
 		for (int i = 0; i < getSizeInventory(); ++i) {
-			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0)
+			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0) {
 				inventory[i] = null;
+			}
 		}
 	}
 
@@ -140,7 +141,7 @@ public class InventoryCustomPlayer implements IInventory
 			NBTTagCompound item = items.getCompoundTagAt(i);
 			byte slot = item.getByte("Slot");
 			if (slot >= 0 && slot < getSizeInventory()) {
-				setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+				inventory[slot] = ItemStack.loadItemStackFromNBT(item);
 			}
 		}
 	}
