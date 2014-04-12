@@ -7,9 +7,8 @@ import tutorial.item.ItemUseMana;
 
 public class SlotCustom extends Slot
 {
-	public SlotCustom(IInventory inventory, int par2, int par3, int par4)
-	{
-		super(inventory, par2, par3, par4);
+	public SlotCustom(IInventory inventory, int slotIndex, int x, int y) {
+		super(inventory, slotIndex, x, y);
 	}
 	
 	/**
@@ -17,9 +16,8 @@ public class SlotCustom extends Slot
 	 * (and now also not always true for our custom inventory slots)
 	 */
 	@Override
-	public boolean isItemValid(ItemStack itemstack)
-	{
+	public boolean isItemValid(ItemStack stack) {
 		// We only want our custom item to be storable in this slot
-		return itemstack.getItem() instanceof ItemUseMana;
+		return stack.getItem() instanceof ItemUseMana;
 	}
 }

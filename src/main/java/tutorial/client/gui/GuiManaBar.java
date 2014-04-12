@@ -27,12 +27,16 @@ public class GuiManaBar extends Gui
 	}
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
-	public void onRenderExperienceBar(RenderGameOverlayEvent event)
+	public void onRenderExperienceBar(RenderGameOverlayEvent.Post event)
 	{
-		if (event.isCancelable() || event.type != ElementType.EXPERIENCE) { return; }
+		if (event.type != ElementType.EXPERIENCE) {
+			return;
+		}
 
 		ExtendedPlayer props = ExtendedPlayer.get(this.mc.thePlayer);
-		if (props == null || props.getMaxMana() == 0) { return; }
+		if (props == null || props.getMaxMana() == 0) {
+			return;
+		}
 
 		int xPos = 2;
 		int yPos = 2;

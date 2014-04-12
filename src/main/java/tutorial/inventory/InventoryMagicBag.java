@@ -19,14 +19,14 @@ public class InventoryMagicBag implements IInventory
 	private ItemStack[] inventory = new ItemStack[INV_SIZE];
 
 	/** Provides NBT Tag Compound to reference */
-	private final ItemStack invItem;
+	private final ItemStack invStack;
 
 	public InventoryMagicBag(ItemStack stack) {
-		this.invItem = stack;
-		if (!stack.hasTagCompound()) {
-			stack.setTagCompound(new NBTTagCompound());
+		this.invStack = stack;
+		if (!invStack.hasTagCompound()) {
+			invStack.setTagCompound(new NBTTagCompound());
 		}
-		readFromNBT(stack.getTagCompound());
+		readFromNBT(invStack.getTagCompound());
 	}
 
 	@Override
@@ -91,12 +91,17 @@ public class InventoryMagicBag implements IInventory
 			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0)
 				inventory[i] = null;
 		}
-		writeToNBT(invItem.getTagCompound());
+		writeToNBT(invStack.getTagCompound());
 	}
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return player.getHeldItem() == invItem;
+		// this will close the inventory if the player tries to move
+		// the item that opened it, but you need to return this method
+		// from the Container's canInteractWith method
+		// an alternative would be to override the slotClick method and
+		// prevent the current item slot from being clicked
+		return player.getHeldItem() == invStack;
 	}
 
 	@Override

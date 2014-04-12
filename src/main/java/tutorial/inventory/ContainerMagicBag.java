@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 public class ContainerMagicBag extends Container
 {
 	/** The Item Inventory for this Container */
-	public final InventoryMagicBag inventory;
+	private final InventoryMagicBag inventory;
 
 	private static final int
 	ARMOR_START = InventoryMagicBag.INV_SIZE, ARMOR_END = ARMOR_START + 3,
@@ -46,12 +46,14 @@ public class ContainerMagicBag extends Container
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+	public boolean canInteractWith(EntityPlayer player) {
+		// be sure to return the inventory's isUseableByPlayer method
+		// if you defined special behavior there:
+		return inventory.isUseableByPlayer(player);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
+	public ItemStack transferStackInSlot(EntityPlayer player, int par2)
 	{
 		ItemStack itemstack = null;
 		Slot slot = (Slot) this.inventorySlots.get(par2);
@@ -106,9 +108,18 @@ public class ContainerMagicBag extends Container
 				return null;
 			}
 
-			slot.onPickupFromSlot(par1EntityPlayer, itemstack1);
+			slot.onPickupFromSlot(player, itemstack1);
 		}
 
 		return itemstack;
+	}
+
+	@Override
+	public ItemStack slotClick(int slot, int button, int flag, EntityPlayer player) {
+		// this will prevent the player from interacting with the item that opened the inventory:
+		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem()) {
+			return null;
+		}
+		return super.slotClick(slot, button, flag, player);
 	}
 }

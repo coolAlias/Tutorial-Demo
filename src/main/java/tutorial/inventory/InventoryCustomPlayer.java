@@ -9,10 +9,10 @@ import tutorial.item.ItemUseMana;
 
 public class InventoryCustomPlayer implements IInventory
 {
-	/** The name for your custom inventory, possibly just "Inventory" */
+	/** The name your custom inventory will display in the GUI, possibly just "Inventory" */
 	private final String name = "Custom Inventory";
 
-	/** In case your inventory name is too generic, define a name to store the NBT tag in as well */
+	/** The key used to store and retrieve the inventory from NBT */
 	private final String tagName = "CustomInvTag";
 
 	/** Define the inventory size here for easy reference */
@@ -21,7 +21,7 @@ public class InventoryCustomPlayer implements IInventory
 	public static final int INV_SIZE = 2;
 
 	/** Inventory's size must be same as number of slots you add to the Container class */
-	ItemStack[] inventory = new ItemStack[INV_SIZE];
+	private ItemStack[] inventory = new ItemStack[INV_SIZE];
 
 	public InventoryCustomPlayer() {
 		// don't need anything here!
