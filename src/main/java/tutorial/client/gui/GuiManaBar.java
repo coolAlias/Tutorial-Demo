@@ -19,7 +19,7 @@ public class GuiManaBar extends Gui
 {
 	private Minecraft mc;
 
-	private static final ResourceLocation texturepath = new ResourceLocation("tutorial", "textures/gui/mana_bar.png");
+	private static final ResourceLocation texture = new ResourceLocation("tutorial", "textures/gui/mana_bar.png");
 
 	public GuiManaBar(Minecraft mc) {
 		super();
@@ -40,7 +40,7 @@ public class GuiManaBar extends Gui
 
 		int xPos = 2;
 		int yPos = 2;
-		this.mc.getTextureManager().bindTexture(texturepath);
+		this.mc.getTextureManager().bindTexture(texture);
 		
 		// Add this block of code before you draw the section of your texture containing transparency
 		GL11.glEnable(GL11.GL_BLEND);

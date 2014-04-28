@@ -2,6 +2,7 @@ package tutorial.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
 
@@ -31,7 +32,7 @@ public class KeyHandler
 	public KeyHandler() {
 		mc = Minecraft.getMinecraft();
 		for (int i = 0; i < desc.length; ++i) {
-			keys[i] = new KeyBinding(desc[i], keyValues[i], "key.tutorial.category");
+			keys[i] = new KeyBinding(desc[i], keyValues[i], StatCollector.translateToLocal("key.tutorial.label"));
 			ClientRegistry.registerKeyBinding(keys[i]);
 		}
 	}
