@@ -53,10 +53,10 @@ public class ContainerMagicBag extends Container
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int par2)
+	public ItemStack transferStackInSlot(EntityPlayer player, int index)
 	{
 		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(par2);
+		Slot slot = (Slot) this.inventorySlots.get(index);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -64,7 +64,7 @@ public class ContainerMagicBag extends Container
 			itemstack = itemstack1.copy();
 
 			// If item is in our custom Inventory or an ARMOR slot
-			if (par2 < INV_START)
+			if (index < INV_START)
 			{
 				// try to place in player inventory / action bar
 				if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END+1, true))
@@ -88,7 +88,7 @@ public class ContainerMagicBag extends Container
 				}
 
 				// item is in inventory or action bar
-				else if (par2 >= INV_START)
+				else if (index >= INV_START)
 				{
 					// place in custom inventory
 					if (!this.mergeItemStack(itemstack1, 0, ARMOR_START, false))
@@ -121,5 +121,89 @@ public class ContainerMagicBag extends Container
 			return null;
 		}
 		return super.slotClick(slot, button, flag, player);
+	}
+
+	// IMPORTANT to override the mergeItemStack method if your inventory stack size limit is 1
+	/**
+	 * Vanilla method fails to account for stack size limits of one, resulting in only one
+	 * item getting placed in the slot and the rest disappearing into thin air; vanilla
+	 * method also fails to check whether stack is valid for slot
+	 */
+	@Override
+	protected boolean mergeItemStack(ItemStack stack, int start, int end, boolean backwards)
+	{
+		boolean flag1 = false;
+		int k = (backwards ? end - 1 : start);
+		Slot slot;
+		ItemStack itemstack1;
+
+		if (stack.isStackable())
+		{
+			while (stack.stackSize > 0 && (!backwards && k < end || backwards && k >= start))
+			{
+				slot = (Slot) inventorySlots.get(k);
+				itemstack1 = slot.getStack();
+
+				if (!slot.isItemValid(stack)) {
+					continue;
+				}
+
+				if (itemstack1 != null && itemstack1.getItem() == stack.getItem() &&
+						(!stack.getHasSubtypes() || stack.getItemDamage() == itemstack1.getItemDamage()) &&
+						ItemStack.areItemStackTagsEqual(stack, itemstack1))
+				{
+					int l = itemstack1.stackSize + stack.stackSize;
+
+					if (l <= stack.getMaxStackSize() && l <= slot.getSlotStackLimit()) {
+						stack.stackSize = 0;
+						itemstack1.stackSize = l;
+						inventory.markDirty();
+						flag1 = true;
+					} else if (itemstack1.stackSize < stack.getMaxStackSize() && l < slot.getSlotStackLimit()) {
+						stack.stackSize -= stack.getMaxStackSize() - itemstack1.stackSize;
+						itemstack1.stackSize = stack.getMaxStackSize();
+						inventory.markDirty();
+						flag1 = true;
+					}
+				}
+
+				k += (backwards ? -1 : 1);
+			}
+		}
+
+		if (stack.stackSize > 0)
+		{
+			k = (backwards ? end - 1 : start);
+
+			while (!backwards && k < end || backwards && k >= start) {
+				slot = (Slot) inventorySlots.get(k);
+				itemstack1 = slot.getStack();
+
+				if (!slot.isItemValid(stack)) {
+					continue;
+				}
+
+				if (itemstack1 == null) {
+					int l = stack.stackSize;
+
+					if (l <= slot.getSlotStackLimit()) {
+						slot.putStack(stack.copy());
+						stack.stackSize = 0;
+						inventory.markDirty();
+						flag1 = true;
+						break;
+					} else {
+						putStackInSlot(k, new ItemStack(stack.getItem(), slot.getSlotStackLimit(), stack.getItemDamage()));
+						stack.stackSize -= slot.getSlotStackLimit();
+						inventory.markDirty();
+						flag1 = true;
+					}
+				}
+
+				k += (backwards ? -1 : 1);
+			}
+		}
+
+		return flag1;
 	}
 }
