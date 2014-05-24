@@ -34,7 +34,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public final class TutorialMain
 {
 	@Instance("tutorial")
-	public static TutorialMain instance = new TutorialMain();
+	public static TutorialMain instance;
 
 	@SidedProxy(clientSide = "tutorial.ClientProxy", serverSide = "tutorial.CommonProxy")
 	public static CommonProxy proxy;
