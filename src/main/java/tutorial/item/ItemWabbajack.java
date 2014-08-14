@@ -49,8 +49,8 @@ public class ItemWabbajack extends Item {
 	}
 
 	@Override
-	public Multimap getItemAttributeModifiers() {
-		Multimap multimap = super.getItemAttributeModifiers();
+	public Multimap getAttributeModifiers(ItemStack stack) {
+		Multimap multimap = super.getAttributeModifiers(stack);
 		multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", weaponDamage, 0));
 		return multimap;
 	}
