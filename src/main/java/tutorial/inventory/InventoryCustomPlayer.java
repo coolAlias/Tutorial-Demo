@@ -112,8 +112,7 @@ public class InventoryCustomPlayer implements IInventory
 	 * even when this returns false
 	 */
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack)
-	{
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		// If you have different kinds of slots, then check them here:
 		// if (slot == SLOT_SHIELD && stack.getItem() instanceof ItemShield) return true;
 

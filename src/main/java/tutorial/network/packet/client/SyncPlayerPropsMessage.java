@@ -71,7 +71,6 @@ public class SyncPlayerPropsMessage implements IMessage
 		@SideOnly(Side.CLIENT)
 		public IMessage handleClientMessage(EntityPlayer player, SyncPlayerPropsMessage message, MessageContext ctx) {
 			// 	now we can just load the NBTTagCompound data directly; one and done, folks
-			System.out.println("CLIENT message received - syncing player data");
 			ExtendedPlayer.get(player).loadNBTData(message.data);
 			return null;
 		}

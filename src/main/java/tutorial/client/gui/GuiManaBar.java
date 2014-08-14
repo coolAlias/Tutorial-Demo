@@ -41,7 +41,7 @@ public class GuiManaBar extends Gui
 		int xPos = 2;
 		int yPos = 2;
 		this.mc.getTextureManager().bindTexture(texture);
-		
+
 		// Add this block of code before you draw the section of your texture containing transparency
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -61,7 +61,7 @@ public class GuiManaBar extends Gui
 		this.mc.fontRenderer.drawString(s, xPos, yPos + 1, 0);
 		this.mc.fontRenderer.drawString(s, xPos, yPos - 1, 0);
 		this.mc.fontRenderer.drawString(s, xPos, yPos, 8453920);
-		
+
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);

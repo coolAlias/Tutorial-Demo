@@ -34,7 +34,7 @@ public class SlotArmor extends Slot
 		Item item = (stack == null ? null : stack.getItem());
 		return item != null && item.isValidArmor(stack, armorType, player);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getBackgroundIconIndex() {
