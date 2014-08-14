@@ -17,18 +17,14 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.2-1.0"
+version = "1.7.10-1.0"
 group = "com.google.coolalias.modid" 
 archivesBaseName = "tutorial"
 
 minecraft {
-    version = "1.7.2-10.12.1.1060"
-    if (file('../run').exists()) {
-        assetDir = "../run/assets"
-    } else {
-        assetDir = "assets"
-    }
+    version = "1.7.10-10.13.0.1180"
 }
+
 processResources
 {
     // replace stuff in mcmod.info, nothing else

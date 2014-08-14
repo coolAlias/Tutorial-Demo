@@ -18,7 +18,7 @@ import tutorial.item.ItemWabbajack;
 import tutorial.item.ItemWizardArmor;
 import tutorial.item.crafting.RecipesAll;
 import tutorial.item.crafting.RecipesWizardArmorDyes;
-import tutorial.network.PacketPipeline;
+import tutorial.network.PacketDispatcher;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -30,20 +30,26 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = "tutorial", name = "Tutorial", version = "1.7.2-1.0.0")
+@Mod(modid = TutorialMain.MOD_ID, name = "Tutorial", version = "1.7.10-1.0.0")
 public final class TutorialMain
 {
-	@Instance("tutorial")
+	public static final String MOD_ID = "tutorial";
+
+	@Instance(MOD_ID)
 	public static TutorialMain instance;
 
 	@SidedProxy(clientSide = "tutorial.ClientProxy", serverSide = "tutorial.CommonProxy")
 	public static CommonProxy proxy;
 
-	/** Updated PacketHandler from Forge wiki tutorial: http://www.minecraftforge.net/wiki/Netty_Packet_Handling */
-	public static final PacketPipeline packetPipeline = new PacketPipeline();
+	/**
+	 * Current recommended version of Networking is to use the SimpleNetworkWrapper class - don't forget to register each packet!
+	 * Mine is commented out because I implemented it inside of a class; see {@link PacketDispatcher}
+	 * If you don't need the class, simply create your instance here:
+	 */
+	//public static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
 
 	/** This is used to keep track of GUIs that we make*/
-	private static int modGuiIndex = 0;
+	private static int modGuiIndex = 10;
 
 	/** Custom GUI indices: */
 	public static final int
@@ -72,6 +78,11 @@ public final class TutorialMain
 
 	// ARMOR MATERIALS
 	public static final ArmorMaterial armorWool = EnumHelper.addArmorMaterial("Wool", 5, new int[] {1,2,1,1}, 30);
+	/*
+	@EventHandler
+	public void onServerStarting(FMLServerStartingEvent event) {
+
+	} */
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -79,7 +90,7 @@ public final class TutorialMain
 		config.load();
 		wizardArmorFlag = config.get(Configuration.CATEGORY_GENERAL, "WizardArmorFlag", true).getBoolean(true);
 		config.save();
-	
+
 		magicBag = new ItemMagicBag().setUnlocalizedName("magic_bag");
 		GameRegistry.registerItem(magicBag, magicBag.getUnlocalizedName());
 		useMana = new ItemUseMana().setUnlocalizedName("use_mana");
@@ -106,11 +117,14 @@ public final class TutorialMain
 			CraftingManager.getInstance().getRecipeList().add(new RecipesWizardArmorDyes());
 			RecipesAll.instance().addArmorRecipes(CraftingManager.getInstance());
 		}
+
+		// Remember to register your packets! This applies whether or not you used a
+		// custom class or direct implementation of SimpleNetworkWrapper
+		PacketDispatcher.registerPackets();
 	}
 
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
-		packetPipeline.initialise();
 		proxy.registerRenderers();
 		MinecraftForge.EVENT_BUS.register(new TutEventHandler());
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new CommonProxy());
@@ -118,8 +132,6 @@ public final class TutorialMain
 
 	@EventHandler
 	public void postInitialise(FMLPostInitializationEvent event) {
-		packetPipeline.postInitialise();
-		
 		// this is generally a good place to modify recipes or otherwise interact with other mods
 	}
 }

@@ -7,7 +7,8 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
 
 import tutorial.TutorialMain;
-import tutorial.network.packet.OpenGuiPacket;
+import tutorial.network.PacketDispatcher;
+import tutorial.network.packet.server.OpenGuiMessage;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -47,7 +48,7 @@ public class KeyHandler
 		// so we cannot close an inventory screen from here; that should be done in the GUI itself
 		if (mc.inGameHasFocus) {
 			if (keys[CUSTOM_INV].getIsKeyPressed()) {
-				TutorialMain.packetPipeline.sendToServer(new OpenGuiPacket(TutorialMain.GUI_CUSTOM_INV));
+				PacketDispatcher.sendToServer(new OpenGuiMessage(TutorialMain.GUI_CUSTOM_INV));
 			}
 		}
 	}

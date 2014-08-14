@@ -13,6 +13,7 @@ import tutorial.inventory.ContainerCustomPlayer;
 import tutorial.inventory.ContainerMagicBag;
 import tutorial.inventory.InventoryMagicBag;
 import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -23,6 +24,13 @@ public class CommonProxy implements IGuiHandler
 
 	public int addArmor(String string) {
 		return 0;
+	}
+	
+	/**
+	 * Returns a side-appropriate EntityPlayer for use during message handling
+	 */
+	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+		return ctx.getServerHandler().playerEntity;
 	}
 
 	@Override

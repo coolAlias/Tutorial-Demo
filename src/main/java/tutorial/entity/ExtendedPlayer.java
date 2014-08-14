@@ -7,9 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import tutorial.CommonProxy;
-import tutorial.TutorialMain;
 import tutorial.inventory.InventoryCustomPlayer;
-import tutorial.network.packet.SyncPlayerPropsPacket;
+import tutorial.network.PacketDispatcher;
+import tutorial.network.packet.client.SyncPlayerPropsMessage;
 
 public class ExtendedPlayer implements IExtendedEntityProperties
 {
@@ -47,24 +47,30 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 
 	@Override
 	public final void saveNBTData(NBTTagCompound compound) {
+		// We store all of our data nested in a single tag;
+		// this way, we never have to worry about conflicting with other
+		// mods that may also be writing to the player's tag compound
 		NBTTagCompound properties = new NBTTagCompound();
-		// Write custom inventory to NBT
+		
+		// Write everything to our new tag:
 		inventory.writeToNBT(properties);
 		properties.setInteger("CurrentMana", player.getDataWatcher().getWatchableObjectInt(MANA_WATCHER));
 		properties.setInteger("MaxMana", maxMana);
 		properties.setInteger("ManaRegenTimer", manaRegenTimer);
+		
+		// Finally, set the tag with our unique identifier:
 		compound.setTag(EXT_PROP_NAME, properties);
 	}
 
 	@Override
 	public final void loadNBTData(NBTTagCompound compound) {
+		// Pretty much the reverse of saveNBTData - get our
+		// unique tag and then load everything from it:
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-		// Read custom inventory from NBT
 		inventory.readFromNBT(properties);
 		player.getDataWatcher().updateObject(MANA_WATCHER, properties.getInteger("CurrentMana"));
 		maxMana = properties.getInteger("MaxMana");
 		manaRegenTimer = properties.getInteger("ManaRegenTimer");
-		System.out.println("[TUT PROPS] Mana from NBT: " + player.getDataWatcher().getWatchableObjectInt(MANA_WATCHER) + "/" + this.maxMana);
 	}
 
 	@Override
@@ -144,9 +150,9 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 		maxMana = (amount > 0 ? amount : 0);
 		// if your extended properties contains a lot of data, it would be better
 		// to make an individual packet for maxMana, rather than sending all of
-		// the data each time max mana changes... just remember to register any
-		// new packets you create to the PacketPipeline, or your game will crash
-		TutorialMain.packetPipeline.sendTo(new SyncPlayerPropsPacket(player), (EntityPlayerMP) player);
+		// the data each time max mana changes...
+		
+		PacketDispatcher.sendTo(new SyncPlayerPropsMessage(player), (EntityPlayerMP) player);
 	}
 
 	/**
@@ -177,6 +183,6 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 		if (savedData != null) { playerData.loadNBTData(savedData); }
 		// data can by synced just by sending the appropriate packet, as everything
 		// is handled internally by the packet class
-		TutorialMain.packetPipeline.sendTo(new SyncPlayerPropsPacket(player), (EntityPlayerMP) player);
+		PacketDispatcher.sendTo(new SyncPlayerPropsMessage(player), (EntityPlayerMP) player);
 	}
 }
