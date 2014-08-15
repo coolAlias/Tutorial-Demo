@@ -7,9 +7,8 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * 
- * For messages handled on the CLIENT.
- * This is just a convenience class that will prevent the server-side message handling
- * method from appearing in our client message handler classes.
+ * Handler for messages sent to the CLIENT
+ * Only allows implementation of {@link AbstractMessageHandler#handleClientMessage handleClientMessage}
  * 
  */
 public abstract class AbstractClientMessageHandler<T extends IMessage> extends AbstractMessageHandler<T> {
