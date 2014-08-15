@@ -1,5 +1,5 @@
-Tutorial-1.7.2
-==============
+Tutorial-1.7.10
+===============
 
 Demo of various topics covered in my forge tutorials, namely IExtendedEntityProperties and custom inventories,
 with updated network code, a working mana bar, an item that uses mana, and a custom player inventory that can
