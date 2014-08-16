@@ -43,7 +43,7 @@ public class AttackTimePacket implements IMessage
 	 * in both {@link AbstractMessageHandler#handleClientMessage} and {@link AbstractMessageHandler#handleServerMessage}.
 	 *
 	 */
-	public static class AttackTimePacketHandler implements IMessageHandler<AttackTimePacket, IMessage> {
+	public static class Handler implements IMessageHandler<AttackTimePacket, IMessage> {
 		@Override
 		public IMessage onMessage(AttackTimePacket message, MessageContext ctx) {
 			TutorialMain.proxy.getPlayerEntity(ctx).attackTime = message.attackTime;

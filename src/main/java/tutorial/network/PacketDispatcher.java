@@ -56,8 +56,8 @@ public class PacketDispatcher
 		// about what number comes next or if I missed on should I ever rearrange the order
 		// of registration (for instance, if you wanted to alphabetize them... yeah...)
 		// It's even easier if you create a convenient 'registerMessage' method:
-		registerMessage(OpenGuiMessage.OpenGuiMessageHandler.class, OpenGuiMessage.class);
-		registerMessage(SyncPlayerPropsMessage.SyncPlayerPropsMessageHandler.class, SyncPlayerPropsMessage.class);
+		registerMessage(OpenGuiMessage.Handler.class, OpenGuiMessage.class);
+		registerMessage(SyncPlayerPropsMessage.Handler.class, SyncPlayerPropsMessage.class);
 
 		// If you don't want to make a 'registerMessage' method, you can do it directly:
 		//PacketDispatcher.dispatcher.registerMessage(OpenGuiMessage.OpenGuiMessageHandler.class, OpenGuiMessage.class, packetId++, Side.SERVER);
@@ -66,19 +66,18 @@ public class PacketDispatcher
 		/** The following two packets are not used in this demo, but have been used in my other mods */
 		/** I include them here simply for the sake of demonstrating packets that can be sent to both sides */
 		// Bi-directional packets (each side handled differently, implementing AbstractBiMessageHandler)
-		registerMessage(PlaySoundPacket.PlaySoundPacketHandler.class, PlaySoundPacket.class);
+		registerMessage(PlaySoundPacket.Handler.class, PlaySoundPacket.class);
 
 		// Bi-directional packets using standard IMessageHandler implementation (handled identically on both sides)
 		// Note how this packet requires a separate method, since there is no way to determine side
 		// based on the handler class
-		registerBiMessage(AttackTimePacket.AttackTimePacketHandler.class, AttackTimePacket.class);
+		registerBiMessage(AttackTimePacket.Handler.class, AttackTimePacket.class);
 	}
 
 	/**
 	 * Registers a message and message handler on the designated side;
 	 * used for standard IMessage + IMessageHandler implementations
 	 */
-	@SuppressWarnings("unused")
 	private static final <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> handlerClass, Class<REQ> messageClass, Side side) {
 		PacketDispatcher.dispatcher.registerMessage(handlerClass, messageClass, packetId++, side);
 	}
@@ -99,14 +98,13 @@ public class PacketDispatcher
 	 */
 	private static final <REQ extends IMessage> void registerMessage(Class<? extends AbstractMessageHandler<REQ>> handlerClass, Class<REQ> messageClass) {
 		if (AbstractClientMessageHandler.class.isAssignableFrom(handlerClass)) {
-			PacketDispatcher.dispatcher.registerMessage(handlerClass, messageClass, packetId++, Side.CLIENT);
+			registerMessage(handlerClass, messageClass, Side.CLIENT);
 		} else if (AbstractServerMessageHandler.class.isAssignableFrom(handlerClass)) {
-			PacketDispatcher.dispatcher.registerMessage(handlerClass, messageClass, packetId++, Side.SERVER);
+			registerMessage(handlerClass, messageClass, Side.SERVER);
 		} else if (AbstractBiMessageHandler.class.isAssignableFrom(handlerClass)) {
-			PacketDispatcher.dispatcher.registerMessage(handlerClass, messageClass, packetId, Side.CLIENT);
-			PacketDispatcher.dispatcher.registerMessage(handlerClass, messageClass, packetId++, Side.SERVER);
+			registerBiMessage(handlerClass, messageClass);
 		} else {
-			throw new IllegalArgumentException("Cannot determine on which Side(s) to register " + handlerClass.getName());
+			throw new IllegalArgumentException("Cannot determine on which Side(s) to register " + handlerClass.getName() + " - unrecognized handler class!");
 		}
 	}
 

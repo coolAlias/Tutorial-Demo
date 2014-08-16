@@ -64,7 +64,7 @@ public class SyncPlayerPropsMessage implements IMessage
 	}
 	
 	// Remember: this class MUST be static or you will crash
-	public static class SyncPlayerPropsMessageHandler extends AbstractClientMessageHandler<SyncPlayerPropsMessage> {
+	public static class Handler extends AbstractClientMessageHandler<SyncPlayerPropsMessage> {
 		// the fruits of our labor: we immediately know from the method name that we are handling
 		// a message on the client side, and we have our EntityPlayer right there ready for use. Awesome.
 		@Override
@@ -85,7 +85,7 @@ public class SyncPlayerPropsMessage implements IMessage
 	 *
 	 */
 	/*
-	public static class SyncPlayerPropsMessageHandler implements IMessageHandler<SyncPlayerPropsMessage, IMessage> {
+	public static class Handler implements IMessageHandler<SyncPlayerPropsMessage, IMessage> {
 		@Override
 		public IMessage onMessage(SyncPlayerPropsMessage message, MessageContext ctx) {
 			EntityPlayer player = TutorialMain.proxy.getPlayerEntity(ctx);

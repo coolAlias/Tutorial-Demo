@@ -36,7 +36,7 @@ public class OpenGuiMessage implements IMessage {
 		buffer.writeInt(id);
 	}
 	
-	public static class OpenGuiMessageHandler extends AbstractServerMessageHandler<OpenGuiMessage> {
+	public static class Handler extends AbstractServerMessageHandler<OpenGuiMessage> {
 		@Override
 		public IMessage handleServerMessage(EntityPlayer player, OpenGuiMessage message, MessageContext ctx) {
 			// because we sent the gui's id with the packet, we can handle all cases with one line:
@@ -52,7 +52,7 @@ public class OpenGuiMessage implements IMessage {
 	 *
 	 */
 	/*
-	public static class OpenGuiMessageHandler implements IMessageHandler<OpenGuiMessage, IMessage> {
+	public static class Handler implements IMessageHandler<OpenGuiMessage, IMessage> {
 		@Override
 		public IMessage onMessage(OpenGuiMessage message, MessageContext ctx) {
 			// You could use ctx.getServerHandler().playerEntity directly, but using the
