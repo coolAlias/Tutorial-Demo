@@ -145,6 +145,7 @@ public class ContainerMagicBag extends Container
 				itemstack1 = slot.getStack();
 
 				if (!slot.isItemValid(stack)) {
+					k += (backwards ? -1 : 1);
 					continue;
 				}
 
@@ -180,6 +181,7 @@ public class ContainerMagicBag extends Container
 				itemstack1 = slot.getStack();
 
 				if (!slot.isItemValid(stack)) {
+					k += (backwards ? -1 : 1);
 					continue;
 				}
 
