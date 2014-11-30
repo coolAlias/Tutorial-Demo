@@ -1,12 +1,15 @@
 package tutorial;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import tutorial.entity.ExtendedPlayer;
+import tutorial.network.PacketDispatcher;
+import tutorial.network.packet.client.SyncPlayerPropsMessage;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class TutEventHandler
@@ -22,15 +25,20 @@ public class TutEventHandler
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer) {
-			ExtendedPlayer.loadProxyData((EntityPlayer) event.entity);
+			PacketDispatcher.sendTo(new SyncPlayerPropsMessage((EntityPlayer) event.entity), (EntityPlayerMP) event.entity);
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void onLivingDeathEvent(LivingDeathEvent event) {
-		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer) {
-			ExtendedPlayer.saveProxyData((EntityPlayer) event.entity);
-		}
+	public void onClonePlayer(PlayerEvent.Clone event) {
+		/*
+		// Easy way to clone extended player data: write to then read from NBT
+		NBTTagCompound compound = new NBTTagCompound();
+		ExtendedPlayer.get(event.original).saveNBTData(compound);
+		ExtendedPlayer.get(event.entityPlayer).loadNBTData(compound);
+		*/
+		// Efficient way: implement copy methods to avoid disk I/O and NBT overhead
+		ExtendedPlayer.get(event.entityPlayer).copy(ExtendedPlayer.get(event.original));
 	}
 
 	@SubscribeEvent

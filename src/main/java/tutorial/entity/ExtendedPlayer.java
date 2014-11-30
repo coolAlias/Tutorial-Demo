@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import tutorial.CommonProxy;
 import tutorial.inventory.InventoryCustomPlayer;
 import tutorial.network.PacketDispatcher;
 import tutorial.network.packet.client.SyncPlayerPropsMessage;
@@ -43,6 +42,17 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 	 */
 	public static final ExtendedPlayer get(EntityPlayer player) {
 		return (ExtendedPlayer) player.getExtendedProperties(EXT_PROP_NAME);
+	}
+
+	/**
+	 * Copies additional player data from the given ExtendedPlayer instance
+	 * Avoids NBT / disk I/O overhead when cloning a player after respawn
+	 */
+	public void copy(ExtendedPlayer props) {
+		inventory.copy(props.inventory);
+		player.getDataWatcher().updateObject(MANA_WATCHER, props.getCurrentMana());
+		maxMana = props.maxMana;
+		manaRegenTimer = props.manaRegenTimer;
 	}
 
 	@Override
@@ -152,37 +162,6 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 		// to make an individual packet for maxMana, rather than sending all of
 		// the data each time max mana changes...
 		
-		PacketDispatcher.sendTo(new SyncPlayerPropsMessage(player), (EntityPlayerMP) player);
-	}
-
-	/**
-	 * Makes it look nicer in the methods save/loadProxyData
-	 */
-	private static final String getSaveKey(EntityPlayer player) {
-		return player.getCommandSenderName() + ":" + EXT_PROP_NAME;
-	}
-
-	/**
-	 * Does everything I did in onLivingDeathEvent and it's static,
-	 * so you now only need to use the following in the above event:
-	 * ExtendedPlayer.saveProxyData((EntityPlayer) event.entity));
-	 */
-	public static final void saveProxyData(EntityPlayer player) {
-		NBTTagCompound savedData = new NBTTagCompound();
-		ExtendedPlayer.get(player).saveNBTData(savedData);
-		CommonProxy.storeEntityData(getSaveKey(player), savedData);
-	}
-
-	/**
-	 * This cleans up the onEntityJoinWorld event by replacing most of the code
-	 * with a single line: ExtendedPlayer.loadProxyData((EntityPlayer) event.entity));
-	 */
-	public static final void loadProxyData(EntityPlayer player) {
-		ExtendedPlayer playerData = ExtendedPlayer.get(player);
-		NBTTagCompound savedData = CommonProxy.getEntityData(getSaveKey(player));
-		if (savedData != null) { playerData.loadNBTData(savedData); }
-		// data can by synced just by sending the appropriate packet, as everything
-		// is handled internally by the packet class
 		PacketDispatcher.sendTo(new SyncPlayerPropsMessage(player), (EntityPlayerMP) player);
 	}
 }

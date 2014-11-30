@@ -27,6 +27,17 @@ public class InventoryCustomPlayer implements IInventory
 		// don't need anything here!
 	}
 
+	/**
+	 * Makes this inventory an exact replica of the inventory provided
+	 */
+	public void copy(InventoryCustomPlayer inv) {
+		for (int i = 0; i < inv.getSizeInventory(); ++i) {
+			ItemStack stack = inv.getStackInSlot(i);
+			inventory[i] = (stack == null ? null : stack.copy());
+		}
+		markDirty();
+	}
+
 	@Override
 	public int getSizeInventory() {
 		return inventory.length;
