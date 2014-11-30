@@ -24,20 +24,13 @@ public class TutEventHandler
 
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer) {
+		if (event.entity instanceof EntityPlayer && !event.entity.worldObj.isRemote) {
 			PacketDispatcher.sendTo(new SyncPlayerPropsMessage((EntityPlayer) event.entity), (EntityPlayerMP) event.entity);
 		}
 	}
 
 	@SubscribeEvent
 	public void onClonePlayer(PlayerEvent.Clone event) {
-		/*
-		// Easy way to clone extended player data: write to then read from NBT
-		NBTTagCompound compound = new NBTTagCompound();
-		ExtendedPlayer.get(event.original).saveNBTData(compound);
-		ExtendedPlayer.get(event.entityPlayer).loadNBTData(compound);
-		*/
-		// Efficient way: implement copy methods to avoid disk I/O and NBT overhead
 		ExtendedPlayer.get(event.entityPlayer).copy(ExtendedPlayer.get(event.original));
 	}
 

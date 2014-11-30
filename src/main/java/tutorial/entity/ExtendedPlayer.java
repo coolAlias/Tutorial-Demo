@@ -46,7 +46,7 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 
 	/**
 	 * Copies additional player data from the given ExtendedPlayer instance
-	 * Avoids NBT / disk I/O overhead when cloning a player after respawn
+	 * Avoids NBT disk I/O overhead when cloning a player after respawn
 	 */
 	public void copy(ExtendedPlayer props) {
 		inventory.copy(props.inventory);
