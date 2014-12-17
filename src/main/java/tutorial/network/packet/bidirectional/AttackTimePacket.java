@@ -1,21 +1,23 @@
 package tutorial.network.packet.bidirectional;
 
 import io.netty.buffer.ByteBuf;
-import tutorial.TutorialMain;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import tutorial.network.packet.AbstractMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * 
  * Sets the player's attack time on either the client or the server.
+ * 
+ * EntityLivingBase#attackTime no longer exists.
  * 
  * Note that this will have no effect in normal Minecraft, but I use
  * it in my mods in combination with some events to prevent the player
  * from spamming the attack key.
  *
  */
+@Deprecated
 public class AttackTimePacket implements IMessage
 {
 	private int attackTime;
@@ -46,7 +48,7 @@ public class AttackTimePacket implements IMessage
 	public static class Handler implements IMessageHandler<AttackTimePacket, IMessage> {
 		@Override
 		public IMessage onMessage(AttackTimePacket message, MessageContext ctx) {
-			TutorialMain.proxy.getPlayerEntity(ctx).attackTime = message.attackTime;
+			//TutorialMain.proxy.getPlayerEntity(ctx).attackTime = message.attackTime;
 			return null;
 		}
 	}

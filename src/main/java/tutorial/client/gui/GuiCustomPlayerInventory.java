@@ -1,19 +1,21 @@
 package tutorial.client.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
 import tutorial.client.KeyHandler;
 import tutorial.inventory.ContainerCustomPlayer;
 import tutorial.inventory.InventoryCustomPlayer;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiCustomPlayerInventory extends GuiContainer
@@ -37,7 +39,7 @@ public class GuiCustomPlayerInventory extends GuiContainer
 	}
 
 	@Override
-	protected void keyTyped(char c, int keyCode) {
+	protected void keyTyped(char c, int keyCode) throws IOException {
 		super.keyTyped(c, keyCode);
 		// We made our keybinding array public and static, so we can access it here
 		if (keyCode == KeyHandler.keys[KeyHandler.CUSTOM_INV].getKeyCode()) {
@@ -64,7 +66,7 @@ public class GuiCustomPlayerInventory extends GuiContainer
 		// if that's not important to you, since we are overriding the default inventory rather than
 		// creating a specific type of inventory
 
-		String s = inventory.hasCustomInventoryName() ? inventory.getInventoryName() : I18n.format(inventory.getInventoryName());
+		String s = inventory.hasCustomName() ? inventory.getName() : I18n.format(inventory.getName());
 		// with the name "Custom Inventory", the 'Cu' will be drawn in the first slot
 		fontRendererObj.drawString(s, xSize - fontRendererObj.getStringWidth(s), 12, 4210752);
 		// this just adds "Inventory" above the player's inventory below
@@ -79,7 +81,6 @@ public class GuiCustomPlayerInventory extends GuiContainer
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(iconLocation);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		// utilize vanilla drawPlayerModel method:
-		GuiInventory.func_147046_a(guiLeft + 51, guiTop + 75, 30, guiLeft + 51 - xSize_lo, guiTop + 25 - ySize_lo, mc.thePlayer);
+		GuiInventory.drawEntityOnScreen(guiLeft + 51, guiTop + 75, 30, guiLeft + 51 - xSize_lo, guiTop + 25 - ySize_lo, mc.thePlayer);
 	}
 }

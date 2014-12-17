@@ -8,6 +8,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tutorial.TutorialMain;
 import tutorial.inventory.InventoryMagicBag;
 
@@ -39,6 +41,7 @@ public class ItemMagicBag extends BaseModItem
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
 		list.add(EnumChatFormatting.ITALIC + "A magic bag that holds many items");
 	}

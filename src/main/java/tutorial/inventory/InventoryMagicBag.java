@@ -5,6 +5,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 import tutorial.item.ItemMagicBag;
 
@@ -71,13 +73,18 @@ public class InventoryMagicBag implements IInventory
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return name;
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return name.length() > 0;
+	}
+
+	@Override
+	public IChatComponent getDisplayName() {
+		return new ChatComponentText(name);
 	}
 
 	@Override
@@ -105,10 +112,10 @@ public class InventoryMagicBag implements IInventory
 	}
 
 	@Override
-	public void openInventory() {}
+	public void openInventory(EntityPlayer player) {}
 
 	@Override
-	public void closeInventory() {}
+	public void closeInventory(EntityPlayer player) {}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
@@ -137,5 +144,25 @@ public class InventoryMagicBag implements IInventory
 			}
 		}
 		compound.setTag("ItemInventory", items);
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		for (int i = 0; i < inventory.length; ++i) {
+			inventory[i] = null;
+		}
 	}
 }

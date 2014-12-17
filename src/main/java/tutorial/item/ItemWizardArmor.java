@@ -1,19 +1,16 @@
 package tutorial.item;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tutorial.TutorialMain;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemWizardArmor extends ItemArmor
 {
-	private IIcon overlay;
 	//private static final String[] iconNames = new String[] {"wizard_helmet_overlay", "wizard_chestplate_overlay", "wizard_leggings_overlay", "wizard_boots_overlay"};
 
 	//public static final String[] colorNumbers = new String[]
@@ -61,9 +58,6 @@ public class ItemWizardArmor extends ItemArmor
 		return getArmorMaterial() != TutorialMain.armorWool ? false : (!stack.hasTagCompound() ? false : (!stack.getTagCompound().hasKey("display") ? false : stack.getTagCompound().getCompoundTag("display").hasKey("color")));
 	}
 
-	/**
-	 * Return the color for the specified armor ItemStack.
-	 */
 	@Override
 	public int getColor(ItemStack stack) {
 		NBTTagCompound compound = stack.getTagCompound();
@@ -75,7 +69,11 @@ public class ItemWizardArmor extends ItemArmor
 		}
 	}
 
-	public void setColor(ItemStack stack, int color) {
+	/**
+	 * setColor method
+	 */
+	@Override
+	public void func_82813_b(ItemStack stack, int color) {
 		NBTTagCompound compound = stack.getTagCompound();
 		if (compound == null) {
 			compound = new NBTTagCompound();
@@ -88,9 +86,6 @@ public class ItemWizardArmor extends ItemArmor
 		compound1.setInteger("color", color);
 	}
 
-	/**
-	 * Remove the color from the specified armor ItemStack.
-	 */
 	@Override
 	public void removeColor(ItemStack stack) {
 		NBTTagCompound nbttagcompound = stack.getTagCompound();
@@ -104,12 +99,6 @@ public class ItemWizardArmor extends ItemArmor
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean requiresMultipleRenderPasses() {
-		return false; // TODO true causes the game to crash...
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int renderPass) {
 		if (renderPass > 0) {
 			return 16777215;
@@ -117,23 +106,5 @@ public class ItemWizardArmor extends ItemArmor
 			int j = this.getColor(stack);
 			return (j < 0 ? 16777215 : j);
 		}
-	}
-
-	@Override
-	public IIcon getIcon(ItemStack stack, int renderPass) {
-		return renderPass == 1 ? overlay : itemIcon;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamageForRenderPass(int damage, int renderPass) {
-		return renderPass == 1 ? overlay : super.getIconFromDamageForRenderPass(damage, renderPass);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister register) {
-		itemIcon = register.registerIcon("tutorial:" + getUnlocalizedName().substring(5));
-		overlay = register.registerIcon("tutorial:" + getUnlocalizedName().substring(5) + "_overlay");
 	}
 }

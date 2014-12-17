@@ -5,6 +5,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import tutorial.item.ItemUseMana;
 
 public class InventoryCustomPlayer implements IInventory
@@ -80,13 +82,18 @@ public class InventoryCustomPlayer implements IInventory
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return name;
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return name.length() > 0;
+	}
+
+	@Override
+	public IChatComponent getDisplayName() {
+		return new ChatComponentText(name);
 	}
 
 	/**
@@ -112,10 +119,10 @@ public class InventoryCustomPlayer implements IInventory
 	}
 
 	@Override
-	public void openInventory() {}
+	public void openInventory(EntityPlayer player) {}
 
 	@Override
-	public void closeInventory() {}
+	public void closeInventory(EntityPlayer player) {}
 
 	/**
 	 * This method doesn't seem to do what it claims to do, as
@@ -141,7 +148,7 @@ public class InventoryCustomPlayer implements IInventory
 				items.appendTag(item);
 			}
 		}
-		
+
 		compound.setTag(tagName, items);
 	}
 
@@ -153,6 +160,26 @@ public class InventoryCustomPlayer implements IInventory
 			if (slot >= 0 && slot < getSizeInventory()) {
 				inventory[slot] = ItemStack.loadItemStackFromNBT(item);
 			}
+		}
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		for (int i = 0; i < inventory.length; ++i) {
+			inventory[i] = null;
 		}
 	}
 }

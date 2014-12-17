@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -26,19 +27,18 @@ public class EntityThrowingRock extends EntityThrowable
 	
 	@Override
 	protected float getGravityVelocity() {
-        return inGround ? 0.0F : super.getGravityVelocity();
+        return field_174854_a ? 0.0F : super.getGravityVelocity();
     }
 
 	@Override
-	protected void onImpact(MovingObjectPosition mop)
-	{
-		if (!inGround) {
+	protected void onImpact(MovingObjectPosition mop) {
+		if (!field_174854_a) {
 			for (int l = 0; l < 4; ++l) {
-				worldObj.spawnParticle("crit", posX, posY, posZ, 0.0D, 0.0D, 0.0D);
+				worldObj.spawnParticle(EnumParticleTypes.CRIT, posX, posY, posZ, 0.0D, 0.0D, 0.0D);
 			}
 		}
 		
-		if (mop.entityHit != null && !inGround) {
+		if (mop.entityHit != null && !field_174854_a) {
 			mop.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), 2.0F);
 		} else {
 			this.motionX = (double)((float)(mop.hitVec.xCoord - this.posX));
@@ -48,7 +48,7 @@ public class EntityThrowingRock extends EntityThrowable
 			this.posX -= this.motionX / (double) f2 * 0.05000000074505806D;
 			this.posY -= this.motionY / (double) f2 * 0.05000000074505806D;
 			this.posZ -= this.motionZ / (double) f2 * 0.05000000074505806D;
-			inGround = true;
+			field_174854_a = true;
 		}
 		
 		if (!worldObj.isRemote) {
@@ -58,7 +58,7 @@ public class EntityThrowingRock extends EntityThrowable
 	
 	@Override
 	public void onCollideWithPlayer(EntityPlayer player) {
-		if (inGround && !worldObj.isRemote) {
+		if (field_174854_a && !worldObj.isRemote) {
 			System.out.println("[ROCK] Picking up rock.");
 			player.inventory.addItemStackToInventory(new ItemStack(TutorialMain.throwingRock));
 			setDead();

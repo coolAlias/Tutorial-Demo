@@ -5,14 +5,14 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
 import tutorial.entity.ExtendedPlayer;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiManaBar extends Gui
@@ -27,8 +27,7 @@ public class GuiManaBar extends Gui
 	}
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
-	public void onRenderExperienceBar(RenderGameOverlayEvent.Post event)
-	{
+	public void onRenderExperienceBar(RenderGameOverlayEvent.Post event) {
 		if (event.type != ElementType.EXPERIENCE) {
 			return;
 		}
@@ -56,11 +55,11 @@ public class GuiManaBar extends Gui
 		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 9, manabarwidth, 3);
 		String s = "Mana " + props.getCurrentMana() + "/" + props.getMaxMana();
 		yPos += 10;
-		this.mc.fontRenderer.drawString(s, xPos + 1, yPos, 0);
-		this.mc.fontRenderer.drawString(s, xPos - 1, yPos, 0);
-		this.mc.fontRenderer.drawString(s, xPos, yPos + 1, 0);
-		this.mc.fontRenderer.drawString(s, xPos, yPos - 1, 0);
-		this.mc.fontRenderer.drawString(s, xPos, yPos, 8453920);
+		this.mc.fontRendererObj.drawString(s, xPos + 1, yPos, 0);
+		this.mc.fontRendererObj.drawString(s, xPos - 1, yPos, 0);
+		this.mc.fontRendererObj.drawString(s, xPos, yPos + 1, 0);
+		this.mc.fontRendererObj.drawString(s, xPos, yPos - 1, 0);
+		this.mc.fontRendererObj.drawString(s, xPos, yPos, 8453920);
 
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

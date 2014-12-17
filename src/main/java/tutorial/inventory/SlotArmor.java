@@ -6,9 +6,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SlotArmor extends Slot
 {
@@ -34,10 +33,10 @@ public class SlotArmor extends Slot
 		Item item = (stack == null ? null : stack.getItem());
 		return item != null && item.isValidArmor(stack, armorType, player);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getBackgroundIconIndex() {
-		return ItemArmor.func_94602_b(this.armorType);
+	public String func_178171_c() {
+		return ItemArmor.EMPTY_SLOT_NAMES[armorType];
 	}
 }

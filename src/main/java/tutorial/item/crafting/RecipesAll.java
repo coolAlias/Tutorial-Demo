@@ -15,9 +15,9 @@ public class RecipesAll
 	}
 	
 	public void addArmorRecipes(CraftingManager crafting) {
-		crafting.addRecipe(new ItemStack(TutorialMain.wizardHat), new Object[] {" X ", " X ", "XXX", 'X', new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE)});
-		crafting.addRecipe(new ItemStack(TutorialMain.wizardRobe), new Object[] {"X X", "XXX", "XXX", 'X', new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE)});
-		crafting.addRecipe(new ItemStack(TutorialMain.wizardPants), new Object[] {"XXX", "X X", "X X", 'X', new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE)});
-		crafting.addRecipe(new ItemStack(TutorialMain.wizardBoots), new Object[] {"X X", "X X", 'X', new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE)});
+		crafting.addRecipe(new ItemStack(TutorialMain.wizardHat)," X ", " X ", "XXX", 'X', new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE));
+		crafting.addRecipe(new ItemStack(TutorialMain.wizardRobe), "X X", "XXX", "XXX", 'X', new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE));
+		crafting.addRecipe(new ItemStack(TutorialMain.wizardPants), "XXX", "X X", "X X", 'X', new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE));
+		crafting.addRecipe(new ItemStack(TutorialMain.wizardBoots), "X X", "X X", 'X', new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE));
 	}
 }

@@ -10,6 +10,17 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import org.apache.logging.log4j.Logger;
+
 import tutorial.entity.EntityThrowingRock;
 import tutorial.item.ItemMagicBag;
 import tutorial.item.ItemThrowingRock;
@@ -19,27 +30,20 @@ import tutorial.item.ItemWizardArmor;
 import tutorial.item.crafting.RecipesAll;
 import tutorial.item.crafting.RecipesWizardArmorDyes;
 import tutorial.network.PacketDispatcher;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = TutorialMain.MOD_ID, name = "Tutorial", version = "1.7.10-1.0.0")
+@Mod(modid = TutorialMain.MODID, version = TutorialMain.VERSION)
 public final class TutorialMain
 {
-	public static final String MOD_ID = "tutorial";
+	public static final String MODID = "tutorial";
+	public static final String VERSION = "1.8-v1.0";
 
-	@Instance(MOD_ID)
+	@Mod.Instance(MODID)
 	public static TutorialMain instance;
 
 	@SidedProxy(clientSide = "tutorial.ClientProxy", serverSide = "tutorial.CommonProxy")
 	public static CommonProxy proxy;
+
+	public static Logger logger;
 
 	/**
 	 * Current recommended version of Networking is to use the SimpleNetworkWrapper class - don't forget to register each packet!
@@ -77,15 +81,17 @@ public final class TutorialMain
 	wizardBoots;
 
 	// ARMOR MATERIALS
-	public static final ArmorMaterial armorWool = EnumHelper.addArmorMaterial("Wool", 5, new int[] {1,2,1,1}, 30);
+	public static final ArmorMaterial armorWool = EnumHelper.addArmorMaterial("Wool", "FakeTexture", 5, new int[] {1,2,1,1}, 30);
 	/*
 	@EventHandler
 	public void onServerStarting(FMLServerStartingEvent event) {
 
 	} */
 
-	@EventHandler
+	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		logger = event.getModLog();
+		logger.info("Beginning pre-initialization");
 		Configuration config = new Configuration(new File(event.getModConfigurationDirectory().getAbsolutePath() + "/Tutorial.cfg"));
 		config.load();
 		wizardArmorFlag = config.get(Configuration.CATEGORY_GENERAL, "WizardArmorFlag", true).getBoolean(true);
@@ -123,14 +129,14 @@ public final class TutorialMain
 		PacketDispatcher.registerPackets();
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {
 		proxy.registerRenderers();
 		MinecraftForge.EVENT_BUS.register(new TutEventHandler());
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new CommonProxy());
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void postInitialise(FMLPostInitializationEvent event) {
 		// this is generally a good place to modify recipes or otherwise interact with other mods
 	}

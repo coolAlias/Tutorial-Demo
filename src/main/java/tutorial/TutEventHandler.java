@@ -7,10 +7,10 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tutorial.entity.ExtendedPlayer;
 import tutorial.network.PacketDispatcher;
 import tutorial.network.packet.client.SyncPlayerPropsMessage;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class TutEventHandler
 {

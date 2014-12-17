@@ -2,10 +2,10 @@ package tutorial.item.crafting;
 
 import java.util.ArrayList;
 
-import net.minecraft.block.BlockColored;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
@@ -14,9 +14,7 @@ import tutorial.item.ItemWizardArmor;
 
 public class RecipesWizardArmorDyes implements IRecipe
 {
-	/**
-	 * Used to check if a recipe matches current crafting inventory
-	 */
+	@Override
 	public boolean matches(InventoryCrafting crafting, World world) {
 		ItemStack itemstack = null;
 		ArrayList arraylist = new ArrayList();
@@ -43,9 +41,7 @@ public class RecipesWizardArmorDyes implements IRecipe
 		return itemstack != null && !arraylist.isEmpty();
 	}
 
-	/**
-	 * Returns an Item that is the result of this recipe
-	 */
+	@Override
 	public ItemStack getCraftingResult(InventoryCrafting crafting) {
 		ItemStack itemstack = null;
 		int[] aint = new int[3];
@@ -86,7 +82,7 @@ public class RecipesWizardArmorDyes implements IRecipe
 						return null;
 					}
 
-					float[] afloat = EntitySheep.fleeceColorTable[BlockColored.func_150032_b(itemstack1.getItemDamage())];
+					float[] afloat = EntitySheep.func_175513_a(EnumDyeColor.func_176766_a(itemstack1.getMetadata()));
 					int j1 = (int)(afloat[0] * 255.0F);
 					int k1 = (int)(afloat[1] * 255.0F);
 					i1 = (int)(afloat[2] * 255.0F);
@@ -112,19 +108,28 @@ public class RecipesWizardArmorDyes implements IRecipe
 			l = (int)((float)l * f / f1);
 			i1 = (k << 8) + l1;
 			i1 = (i1 << 8) + l;
-			itemarmor.setColor(itemstack, i1);
+			itemarmor.func_82813_b(itemstack, i1);
 			return itemstack;
 		}
 	}
 
-	/**
-	 * Returns the size of the recipe area
-	 */
+	@Override
 	public int getRecipeSize() {
 		return 10;
 	}
 
+	@Override
 	public ItemStack getRecipeOutput() {
 		return null;
+	}
+
+	@Override
+	public ItemStack[] func_179532_b(InventoryCrafting crafting) {
+		ItemStack[] stacks = new ItemStack[crafting.getSizeInventory()];
+		for (int i = 0; i < stacks.length; ++i) {
+			ItemStack stack = crafting.getStackInSlot(i);
+			stacks[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(stack);
+		}
+		return stacks;
 	}
 }

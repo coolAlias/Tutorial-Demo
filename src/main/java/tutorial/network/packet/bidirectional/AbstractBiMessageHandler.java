@@ -1,9 +1,9 @@
 package tutorial.network.packet.bidirectional;
 
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import tutorial.network.PacketDispatcher;
 import tutorial.network.packet.AbstractMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 
 /**
  * For messages which require different handling on each Side;

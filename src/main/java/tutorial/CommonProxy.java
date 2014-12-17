@@ -2,14 +2,14 @@ package tutorial;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import tutorial.client.gui.GuiCustomPlayerInventory;
 import tutorial.client.gui.GuiMagicBag;
 import tutorial.entity.ExtendedPlayer;
 import tutorial.inventory.ContainerCustomPlayer;
 import tutorial.inventory.ContainerMagicBag;
 import tutorial.inventory.InventoryMagicBag;
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class CommonProxy implements IGuiHandler
 {

@@ -2,6 +2,11 @@ package tutorial.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 import tutorial.TutorialMain;
 import tutorial.network.packet.AbstractMessageHandler;
 import tutorial.network.packet.bidirectional.AbstractBiMessageHandler;
@@ -11,11 +16,6 @@ import tutorial.network.packet.client.AbstractClientMessageHandler;
 import tutorial.network.packet.client.SyncPlayerPropsMessage;
 import tutorial.network.packet.server.AbstractServerMessageHandler;
 import tutorial.network.packet.server.OpenGuiMessage;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
 
 
 /**
@@ -46,7 +46,7 @@ public class PacketDispatcher
 	 * Since I will be adding wrapper methods, this field is private, but you should
 	 * make it public if you plan on using it directly.
 	 */
-	private static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(TutorialMain.MOD_ID);
+	private static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(TutorialMain.MODID);
 
 	/**
 	 * Call this during pre-init or loading and register all of your packets (messages) here
@@ -141,7 +141,7 @@ public class PacketDispatcher
 	 * Sends a message to everyone within a certain range of the player provided.
 	 */
 	public static final void sendToAllAround(IMessage message, EntityPlayer player, double range) {
-		PacketDispatcher.sendToAllAround(message, player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, range);
+		PacketDispatcher.sendToAllAround(message, player.worldObj.provider.getDimensionId(), player.posX, player.posY, player.posZ, range);
 	}
 
 	/**
