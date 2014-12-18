@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import tutorial.TutorialMain;
 import tutorial.entity.ExtendedPlayer;
 
 public class ItemUseMana extends BaseModItem
@@ -20,9 +21,9 @@ public class ItemUseMana extends BaseModItem
 		if (!world.isRemote) {
 			ExtendedPlayer props = ExtendedPlayer.get(player);
 			if (props.consumeMana(15)) {
-				System.out.println("[MANA ITEM] Player had enough mana. Do something awesome!");
+				TutorialMain.logger.info("Player had enough mana. Do something awesome!");
 			} else {
-				System.out.println("[MANA ITEM] Player ran out of mana. Sad face.");
+				TutorialMain.logger.info("Player ran out of mana. Sad face.");
 				props.replenishMana();
 			}
 		}

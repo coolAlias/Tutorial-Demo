@@ -23,6 +23,7 @@ public class CommonProxy implements IGuiHandler
 	 * Returns a side-appropriate EntityPlayer for use during message handling
 	 */
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+		TutorialMain.logger.info("Retrieving player from CommonProxy for message on side " + ctx.side);
 		return ctx.getServerHandler().playerEntity;
 	}
 

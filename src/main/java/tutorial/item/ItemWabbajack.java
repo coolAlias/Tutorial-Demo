@@ -6,13 +6,12 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import com.google.common.collect.Multimap;
 
-public class ItemWabbajack extends Item {
+public class ItemWabbajack extends BaseModItem {
 
 	private final float weaponDamage;
 	//private ToolMaterial toolMaterial;

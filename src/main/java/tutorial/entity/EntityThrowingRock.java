@@ -21,8 +21,8 @@ public class EntityThrowingRock extends EntityThrowable
 		super(world, entity);
 	}
 
-	public EntityThrowingRock(World world, double par2, double par4, double par6) {
-		super(world, par2, par4, par6);
+	public EntityThrowingRock(World world, double x, double y, double z) {
+		super(world, x, y, z);
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class EntityThrowingRock extends EntityThrowable
 	@Override
 	public void onCollideWithPlayer(EntityPlayer player) {
 		if (inGround && !worldObj.isRemote) {
-			System.out.println("[ROCK] Picking up rock.");
+			TutorialMain.logger.info("Picked up a rock.");
 			player.inventory.addItemStackToInventory(new ItemStack(TutorialMain.throwingRock));
 			setDead();
 		}

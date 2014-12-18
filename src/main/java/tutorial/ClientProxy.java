@@ -1,6 +1,7 @@
 package tutorial;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -10,12 +11,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import tutorial.client.KeyHandler;
 import tutorial.client.gui.GuiManaBar;
 import tutorial.entity.EntityThrowingRock;
+import tutorial.item.BaseModItem;
 
 public class ClientProxy extends CommonProxy
 {
+	private Minecraft mc = Minecraft.getMinecraft();
+
 	@Override
 	public void registerRenderers() {
-		Minecraft mc = Minecraft.getMinecraft();
 		RenderingRegistry.registerEntityRenderingHandler(EntityThrowingRock.class, new RenderSnowball(mc.getRenderManager(), TutorialMain.throwingRock, mc.getRenderItem()));
 		// can register other client-side only things here, too:
 
@@ -26,6 +29,11 @@ public class ClientProxy extends CommonProxy
 		// KeyInputEvent is in the FML package, meaning it's posted to the FML event bus
 		// rather than the regular Forge event bus:
 		FMLCommonHandler.instance().bus().register(new KeyHandler());
+		ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();
+		((BaseModItem) TutorialMain.magicBag).registerRenderer(mesher);
+		((BaseModItem) TutorialMain.throwingRock).registerRenderer(mesher);
+		((BaseModItem) TutorialMain.useMana).registerRenderer(mesher);
+		((BaseModItem) TutorialMain.wabbajack).registerRenderer(mesher);
 	}
 
 	@Override
@@ -42,6 +50,7 @@ public class ClientProxy extends CommonProxy
 		// Sounds absurd, but it's true.
 
 		// Solution is to double-check side before returning the player:
-		return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));
+		TutorialMain.logger.info("Retrieving player from ClientProxy for message on side " + ctx.side);
+		return (ctx.side.isClient() ? mc.thePlayer : super.getPlayerEntity(ctx));
 	}
 }

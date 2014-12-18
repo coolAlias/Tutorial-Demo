@@ -50,9 +50,6 @@ public class ItemWizardArmor extends ItemArmor
 		}
 	}
 
-	/**
-	 * Return whether the specified armor ItemStack has a color.
-	 */
 	@Override
 	public boolean hasColor(ItemStack stack) {
 		return getArmorMaterial() != TutorialMain.armorWool ? false : (!stack.hasTagCompound() ? false : (!stack.getTagCompound().hasKey("display") ? false : stack.getTagCompound().getCompoundTag("display").hasKey("color")));
@@ -69,9 +66,6 @@ public class ItemWizardArmor extends ItemArmor
 		}
 	}
 
-	/**
-	 * setColor method
-	 */
 	@Override
 	public void setColor(ItemStack stack, int color) {
 		NBTTagCompound compound = stack.getTagCompound();
