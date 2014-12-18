@@ -104,10 +104,10 @@ public final class TutorialMain
 		wabbajack = GameRegistry.registerItem((new ItemWabbajack().setUnlocalizedName("wabbajack")), "wabbajack", null);
 
 		if (wizardArmorFlag) {
-			wizardHat = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 0).setUnlocalizedName("wizard_hat")), "wizard_hat", null);
-			wizardHat = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 1).setUnlocalizedName("wizard_robe")), "wizard_robe", null);
-			wizardHat = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 2).setUnlocalizedName("wizard_pants")), "wizard_pants", null);
-			wizardHat = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 3).setUnlocalizedName("wizard_boots")), "wizard_boots", null);
+			wizardHat = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 0).setUnlocalizedName("wizard_helmet")), "wizard_helmet", null);
+			wizardRobe = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 1).setUnlocalizedName("wizard_chestplate")), "wizard_chestplate", null);
+			wizardPants = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 2).setUnlocalizedName("wizard_leggings")), "wizard_leggings", null);
+			wizardBoots = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 3).setUnlocalizedName("wizard_boots")), "wizard_boots", null);
 		}
 		// we'll add recipes last, to make sure all items and blocks are ready to go
 		GameRegistry.addShapelessRecipe(new ItemStack(useMana), Items.diamond);

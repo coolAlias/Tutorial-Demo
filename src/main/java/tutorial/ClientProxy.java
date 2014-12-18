@@ -3,7 +3,9 @@ package tutorial;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -34,8 +36,42 @@ public class ClientProxy extends CommonProxy
 		((BaseModItem) TutorialMain.throwingRock).registerRenderer(mesher);
 		((BaseModItem) TutorialMain.useMana).registerRenderer(mesher);
 		((BaseModItem) TutorialMain.wabbajack).registerRenderer(mesher);
+		if (TutorialMain.wizardArmorFlag) {
+			registerItemRenderer(mesher, TutorialMain.wizardHat);
+			registerItemRenderer(mesher, TutorialMain.wizardRobe);
+			registerItemRenderer(mesher, TutorialMain.wizardPants);
+			registerItemRenderer(mesher, TutorialMain.wizardBoots);
+		}
 	}
 
+	/**
+	 * Registers an item with no subtypes using the unlocalized name as the texture name
+	 */
+	private void registerItemRenderer(ItemModelMesher mesher, Item item) {
+		registerItemRenderer(mesher, item, 0);
+	}
+
+	/**
+	 * Registers a specific item subtype using the unlocalized name as the texture name
+	 * @param meta	Always 0 if only one type, otherwise the subtype's metadata value
+	 */
+	private void registerItemRenderer(ItemModelMesher mesher, Item item, int meta) {
+		String name = item.getUnlocalizedName();
+		name = TutorialMain.MODID + ":" + name.substring(name.lastIndexOf(".") + 1);
+		registerItemRenderer(mesher, item, name, meta);
+	}
+
+	/**
+	 * Registers a specific item subtype using the specified texture name
+	 * @param name	Exact name of the texture file to be used, including the "modid:" prefix
+	 * @param meta	Always 0 if only one type, otherwise the subtype's metadata value
+	 */
+	private void registerItemRenderer(ItemModelMesher mesher, Item item, String name, int meta) {
+		TutorialMain.logger.info("Registering renderer for " + name);
+		mesher.register(item, meta, new ModelResourceLocation(name, "inventory"));
+	}
+
+	// Deprecated???
 	@Override
 	public int addArmor(String armor) {
 		//return RenderingRegistry.addNewArmourRendererPrefix(armor);
