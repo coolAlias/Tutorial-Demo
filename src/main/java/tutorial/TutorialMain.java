@@ -10,6 +10,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -124,7 +125,10 @@ public final class TutorialMain
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {
 		proxy.registerRenderers();
-		MinecraftForge.EVENT_BUS.register(new TutEventHandler());
+		TutEventHandler events = new TutEventHandler();
+		MinecraftForge.EVENT_BUS.register(events);
+		// Also register on the FML bus for PlayerLoggedInEvent
+		FMLCommonHandler.instance().bus().register(events);
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 	}
 

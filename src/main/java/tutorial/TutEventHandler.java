@@ -3,11 +3,11 @@ package tutorial;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import tutorial.entity.ExtendedPlayer;
 import tutorial.network.PacketDispatcher;
 import tutorial.network.packet.client.SyncPlayerPropsMessage;
@@ -23,9 +23,10 @@ public class TutEventHandler
 	}
 
 	@SubscribeEvent
-	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		if (event.entity instanceof EntityPlayer && !event.entity.worldObj.isRemote) {
-			PacketDispatcher.sendTo(new SyncPlayerPropsMessage((EntityPlayer) event.entity), (EntityPlayerMP) event.entity);
+	public void onPlayerLogIn(PlayerLoggedInEvent event) {
+		TutorialMain.logger.info("Player logging in");
+		if (event.player instanceof EntityPlayerMP) {
+			PacketDispatcher.sendTo(new SyncPlayerPropsMessage(event.player), (EntityPlayerMP) event.player);
 		}
 	}
 
