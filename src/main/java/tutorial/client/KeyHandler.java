@@ -47,7 +47,7 @@ public class KeyHandler
 		// NOTE that the KeyInputEvent will NOT be posted when a gui screen such as the inventory is open
 		// so we cannot close an inventory screen from here; that should be done in the GUI itself
 		if (mc.inGameHasFocus) {
-			if (keys[CUSTOM_INV].getIsKeyPressed()) {
+			if (keys[CUSTOM_INV].isKeyDown()) {
 				PacketDispatcher.sendToServer(new OpenGuiMessage(TutorialMain.GUI_CUSTOM_INV));
 			}
 		}

@@ -73,7 +73,7 @@ public class ItemWizardArmor extends ItemArmor
 	 * setColor method
 	 */
 	@Override
-	public void func_82813_b(ItemStack stack, int color) {
+	public void setColor(ItemStack stack, int color) {
 		NBTTagCompound compound = stack.getTagCompound();
 		if (compound == null) {
 			compound = new NBTTagCompound();

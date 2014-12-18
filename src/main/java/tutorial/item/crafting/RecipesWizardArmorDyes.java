@@ -82,7 +82,7 @@ public class RecipesWizardArmorDyes implements IRecipe
 						return null;
 					}
 
-					float[] afloat = EntitySheep.func_175513_a(EnumDyeColor.func_176766_a(itemstack1.getMetadata()));
+					float[] afloat = EntitySheep.func_175513_a(EnumDyeColor.byDyeDamage(itemstack1.getMetadata()));
 					int j1 = (int)(afloat[0] * 255.0F);
 					int k1 = (int)(afloat[1] * 255.0F);
 					i1 = (int)(afloat[2] * 255.0F);
@@ -108,7 +108,7 @@ public class RecipesWizardArmorDyes implements IRecipe
 			l = (int)((float)l * f / f1);
 			i1 = (k << 8) + l1;
 			i1 = (i1 << 8) + l;
-			itemarmor.func_82813_b(itemstack, i1);
+			itemarmor.setColor(itemstack, i1);
 			return itemstack;
 		}
 	}
@@ -124,7 +124,7 @@ public class RecipesWizardArmorDyes implements IRecipe
 	}
 
 	@Override
-	public ItemStack[] func_179532_b(InventoryCrafting crafting) {
+	public ItemStack[] getRemainingItems(InventoryCrafting crafting) {
 		ItemStack[] stacks = new ItemStack[crafting.getSizeInventory()];
 		for (int i = 0; i < stacks.length; ++i) {
 			ItemStack stack = crafting.getStackInSlot(i);

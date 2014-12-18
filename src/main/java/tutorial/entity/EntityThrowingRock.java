@@ -27,18 +27,18 @@ public class EntityThrowingRock extends EntityThrowable
 	
 	@Override
 	protected float getGravityVelocity() {
-        return field_174854_a ? 0.0F : super.getGravityVelocity();
+        return inGround ? 0.0F : super.getGravityVelocity();
     }
 
 	@Override
 	protected void onImpact(MovingObjectPosition mop) {
-		if (!field_174854_a) {
+		if (!inGround) {
 			for (int l = 0; l < 4; ++l) {
 				worldObj.spawnParticle(EnumParticleTypes.CRIT, posX, posY, posZ, 0.0D, 0.0D, 0.0D);
 			}
 		}
 		
-		if (mop.entityHit != null && !field_174854_a) {
+		if (mop.entityHit != null && !inGround) {
 			mop.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), 2.0F);
 		} else {
 			this.motionX = (double)((float)(mop.hitVec.xCoord - this.posX));
@@ -48,7 +48,7 @@ public class EntityThrowingRock extends EntityThrowable
 			this.posX -= this.motionX / (double) f2 * 0.05000000074505806D;
 			this.posY -= this.motionY / (double) f2 * 0.05000000074505806D;
 			this.posZ -= this.motionZ / (double) f2 * 0.05000000074505806D;
-			field_174854_a = true;
+			inGround = true;
 		}
 		
 		if (!worldObj.isRemote) {
@@ -58,7 +58,7 @@ public class EntityThrowingRock extends EntityThrowable
 	
 	@Override
 	public void onCollideWithPlayer(EntityPlayer player) {
-		if (field_174854_a && !worldObj.isRemote) {
+		if (inGround && !worldObj.isRemote) {
 			System.out.println("[ROCK] Picking up rock.");
 			player.inventory.addItemStackToInventory(new ItemStack(TutorialMain.throwingRock));
 			setDead();
