@@ -30,8 +30,8 @@ public class KeyHandler
 	/** Make this public or provide a getter if you'll need access to the key bindings from elsewhere */
 	public static final KeyBinding[] keys = new KeyBinding[desc.length];
 
-	public KeyHandler() {
-		mc = Minecraft.getMinecraft();
+	public KeyHandler(Minecraft mc) {
+		this.mc = mc;
 		for (int i = 0; i < desc.length; ++i) {
 			keys[i] = new KeyBinding(desc[i], keyValues[i], StatCollector.translateToLocal("key.tutorial.label"));
 			ClientRegistry.registerKeyBinding(keys[i]);

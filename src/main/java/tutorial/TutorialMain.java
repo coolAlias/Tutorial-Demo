@@ -36,7 +36,7 @@ import tutorial.network.PacketDispatcher;
 public final class TutorialMain
 {
 	public static final String MODID = "tutorial";
-	public static final String VERSION = "1.8-v1.0";
+	public static final String VERSION = "1.0";
 
 	@Mod.Instance(MODID)
 	public static TutorialMain instance;
@@ -83,11 +83,6 @@ public final class TutorialMain
 
 	// ARMOR MATERIALS
 	public static final ArmorMaterial armorWool = EnumHelper.addArmorMaterial("Wool", "FakeTexture", 5, new int[] {1,2,1,1}, 30);
-	/*
-	@EventHandler
-	public void onServerStarting(FMLServerStartingEvent event) {
-
-	} */
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -98,6 +93,7 @@ public final class TutorialMain
 		wizardArmorFlag = config.get(Configuration.CATEGORY_GENERAL, "WizardArmorFlag", true).getBoolean(true);
 		config.save();
 
+		// Initialize and register all blocks, items, and entities
 		magicBag = GameRegistry.registerItem((new ItemMagicBag().setUnlocalizedName("magic_bag")), "magic_bag", null);
 		useMana = GameRegistry.registerItem((new ItemUseMana().setUnlocalizedName("use_mana")), "use_mana", null);
 		throwingRock = GameRegistry.registerItem((new ItemThrowingRock().setUnlocalizedName("throwing_rock")), "throwing_rock", null);
@@ -110,12 +106,6 @@ public final class TutorialMain
 			wizardPants = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 2).setUnlocalizedName("wizard_leggings")), "wizard_leggings", null);
 			wizardBoots = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 3).setUnlocalizedName("wizard_boots")), "wizard_boots", null);
 		}
-		// we'll add recipes last, to make sure all items and blocks are ready to go
-		GameRegistry.addShapelessRecipe(new ItemStack(useMana), Items.diamond);
-		if (wizardArmorFlag) {
-			CraftingManager.getInstance().getRecipeList().add(new RecipesWizardArmorDyes());
-			RecipesAll.instance().addArmorRecipes(CraftingManager.getInstance());
-		}
 
 		// Remember to register your packets! This applies whether or not you used a
 		// custom class or direct implementation of SimpleNetworkWrapper
@@ -124,12 +114,26 @@ public final class TutorialMain
 
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {
+		// Register block, item, and entity renderers after they have been initialized and
+		// registered in pre-init; however, Minecraft's RenderItem and ModelMesher instances
+		// must also be ready, so we have to register renderers during init, not earlier
 		proxy.registerRenderers();
+
+		// Register our event listener:
 		TutEventHandler events = new TutEventHandler();
 		MinecraftForge.EVENT_BUS.register(events);
 		// Also register on the FML bus for PlayerLoggedInEvent
 		FMLCommonHandler.instance().bus().register(events);
+
+		// Register our Gui Handler
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+
+		// Crafting recipes are best loaded during this stage of mod loading
+		GameRegistry.addShapelessRecipe(new ItemStack(useMana), Items.diamond);
+		if (wizardArmorFlag) {
+			CraftingManager.getInstance().getRecipeList().add(new RecipesWizardArmorDyes());
+			RecipesAll.instance().addArmorRecipes(CraftingManager.getInstance());
+		}
 	}
 
 	@Mod.EventHandler

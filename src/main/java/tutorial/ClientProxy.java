@@ -21,7 +21,25 @@ public class ClientProxy extends CommonProxy
 
 	@Override
 	public void registerRenderers() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityThrowingRock.class, new RenderSnowball(mc.getRenderManager(), TutorialMain.throwingRock, mc.getRenderItem()));
+		ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();
+		// For my BaseModItems, I let the Item itself handle registration:
+		((BaseModItem) TutorialMain.magicBag).registerRenderer(mesher);
+		((BaseModItem) TutorialMain.throwingRock).registerRenderer(mesher);
+		((BaseModItem) TutorialMain.useMana).registerRenderer(mesher);
+		((BaseModItem) TutorialMain.wabbajack).registerRenderer(mesher);
+		
+		// If render registration isn't implemented in the class, it has to be done manually:
+		if (TutorialMain.wizardArmorFlag) {
+			// None of these have subtypes, so can be registered with just one damage value
+			registerItemRenderer(mesher, TutorialMain.wizardHat);
+			registerItemRenderer(mesher, TutorialMain.wizardRobe);
+			registerItemRenderer(mesher, TutorialMain.wizardPants);
+			registerItemRenderer(mesher, TutorialMain.wizardBoots);
+		}
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityThrowingRock.class,
+				new RenderSnowball(mc.getRenderManager(), TutorialMain.throwingRock, mc.getRenderItem()));
+		
 		// can register other client-side only things here, too:
 
 		// The RenderGameOverlayEvent is in the MinecraftForge package, so we will
@@ -30,18 +48,7 @@ public class ClientProxy extends CommonProxy
 
 		// KeyInputEvent is in the FML package, meaning it's posted to the FML event bus
 		// rather than the regular Forge event bus:
-		FMLCommonHandler.instance().bus().register(new KeyHandler());
-		ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();
-		((BaseModItem) TutorialMain.magicBag).registerRenderer(mesher);
-		((BaseModItem) TutorialMain.throwingRock).registerRenderer(mesher);
-		((BaseModItem) TutorialMain.useMana).registerRenderer(mesher);
-		((BaseModItem) TutorialMain.wabbajack).registerRenderer(mesher);
-		if (TutorialMain.wizardArmorFlag) {
-			registerItemRenderer(mesher, TutorialMain.wizardHat);
-			registerItemRenderer(mesher, TutorialMain.wizardRobe);
-			registerItemRenderer(mesher, TutorialMain.wizardPants);
-			registerItemRenderer(mesher, TutorialMain.wizardBoots);
-		}
+		FMLCommonHandler.instance().bus().register(new KeyHandler(mc));
 	}
 
 	/**

@@ -2,6 +2,7 @@ package tutorial;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -17,21 +18,27 @@ public class TutEventHandler
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event) {
 		if (event.entity instanceof EntityPlayer) {
-			if (ExtendedPlayer.get((EntityPlayer) event.entity) == null)
+			if (ExtendedPlayer.get((EntityPlayer) event.entity) == null) {
+				TutorialMain.logger.info("Registering extended properties for player");
 				ExtendedPlayer.register((EntityPlayer) event.entity);
+			}
 		}
 	}
 
+	/**
+	 * This event is on the FML bus
+	 */
 	@SubscribeEvent
 	public void onPlayerLogIn(PlayerLoggedInEvent event) {
-		TutorialMain.logger.info("Player logging in");
 		if (event.player instanceof EntityPlayerMP) {
+			TutorialMain.logger.info("Player logged in, sending extended properties to client");
 			PacketDispatcher.sendTo(new SyncPlayerPropsMessage(event.player), (EntityPlayerMP) event.player);
 		}
 	}
 
 	@SubscribeEvent
 	public void onClonePlayer(PlayerEvent.Clone event) {
+		TutorialMain.logger.info("Cloning player extended properties");
 		ExtendedPlayer.get(event.entityPlayer).copy(ExtendedPlayer.get(event.original));
 	}
 
@@ -40,12 +47,12 @@ public class TutEventHandler
 		if (event.entity instanceof EntityPlayer) {
 			ExtendedPlayer props = ExtendedPlayer.get((EntityPlayer) event.entity);
 			if (event.distance > 3.0F && props.getCurrentMana() > 0) {
-				System.out.println("[EVENT] Fall distance: " + event.distance);
-				System.out.println("[EVENT] Current mana: " + props.getCurrentMana());
+				TutorialMain.logger.info("Fall distance: " + event.distance);
+				TutorialMain.logger.info("Current mana: " + props.getCurrentMana());
 				float reduceby = props.getCurrentMana() < (event.distance - 3.0F) ? props.getCurrentMana() : (event.distance - 3.0F);
 				event.distance -= reduceby;
 				props.consumeMana((int) reduceby);
-				System.out.println("[EVENT] Adjusted fall distance: " + event.distance);
+				TutorialMain.logger.info("Adjusted fall distance: " + event.distance);
 			}
 		}
 	}
@@ -56,7 +63,7 @@ public class TutEventHandler
 			EntityPlayer player = (EntityPlayer) event.entity;
 			ExtendedPlayer.get(player).onUpdate();
 			if (player.isPlayerFullyAsleep()) {
-				System.out.println("[TUT MANA] After a full night's rest, you feel refreshed!");
+				player.addChatMessage(new ChatComponentText("After a full night's rest, you feel refreshed!"));
 				ExtendedPlayer.get(player).replenishMana();
 			}
 		}
