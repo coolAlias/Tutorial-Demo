@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -31,8 +32,20 @@ public class TutEventHandler
 	@SubscribeEvent
 	public void onPlayerLogIn(PlayerLoggedInEvent event) {
 		if (event.player instanceof EntityPlayerMP) {
+			// we need this because the client player will be null the first time a packet is sent from EntityJoinWorldEvent
 			TutorialMain.logger.info("Player logged in, sending extended properties to client");
 			PacketDispatcher.sendTo(new SyncPlayerPropsMessage(event.player), (EntityPlayerMP) event.player);
+		}
+	}
+
+	@SubscribeEvent
+	public void onJoinWorld(EntityJoinWorldEvent event) {
+		// If you have any non-DataWatcher fields in your extended properties that
+		// need to be synced to the client, you must send a packet each time the
+		// player joins the world; this takes care of dying, changing dimensions, etc.
+		if (event.entity instanceof EntityPlayerMP) {
+			TutorialMain.logger.info("Player joined world, sending extended properties to client");
+			PacketDispatcher.sendTo(new SyncPlayerPropsMessage((EntityPlayer) event.entity), (EntityPlayerMP) event.entity);
 		}
 	}
 

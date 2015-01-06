@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tutorial.TutorialMain;
 import tutorial.entity.ExtendedPlayer;
 
 /**
@@ -62,7 +63,7 @@ public class SyncPlayerPropsMessage implements IMessage
 		// ByteBufUtils provides a convenient method for writing the compound
 		ByteBufUtils.writeTag(buffer, data);
 	}
-	
+
 	// Remember: this class MUST be static or you will crash
 	public static class Handler extends AbstractClientMessageHandler<SyncPlayerPropsMessage> {
 		// the fruits of our labor: we immediately know from the method name that we are handling
@@ -70,11 +71,22 @@ public class SyncPlayerPropsMessage implements IMessage
 		@Override
 		@SideOnly(Side.CLIENT)
 		public IMessage handleClientMessage(EntityPlayer player, SyncPlayerPropsMessage message, MessageContext ctx) {
-			// 	now we can just load the NBTTagCompound data directly; one and done, folks
-			ExtendedPlayer.get(player).loadNBTData(message.data);
+			// now we can just load the NBTTagCompound data directly; one and done, folks
+			// Note that in 1.8 it is possible for the client player / properties to be null
+			// when receiving this packet upon first joining the world in EntityJoinWorldEvent
+			if (player == null) {
+				TutorialMain.logger.warn("Client player was NULL when SyncPlayerPropsMessage received");
+				return null;
+			}
+			if (ExtendedPlayer.get(player) == null) {
+				TutorialMain.logger.warn("Client extended properties were NULL when SyncPlayerPropsMessage received");
+			} else {
+				TutorialMain.logger.info("Synchronizing extended properties data on CLIENT");
+				ExtendedPlayer.get(player).loadNBTData(message.data);
+			}
 			return null;
 		}
-		
+
 		// Note here that we don't (and can't) implement the handleServerMessage method
 		// since we extended AbstractClientMessage. This is exactly what we want.
 	}
