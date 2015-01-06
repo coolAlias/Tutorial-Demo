@@ -17,7 +17,7 @@ import tutorial.item.BaseModItem;
 
 public class ClientProxy extends CommonProxy
 {
-	private Minecraft mc = Minecraft.getMinecraft();
+	private final Minecraft mc = Minecraft.getMinecraft();
 
 	@Override
 	public void registerRenderers() {
