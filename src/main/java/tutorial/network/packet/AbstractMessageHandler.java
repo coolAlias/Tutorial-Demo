@@ -50,10 +50,17 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
 	 */
 	@Override
 	public IMessage onMessage(T message, MessageContext ctx) {
+		EntityPlayer player = TutorialMain.proxy.getPlayerEntity(ctx);
+		// Note that in 1.8 it is possible for the client player / properties to be null
+		// when receiving this packet upon first joining the world in EntityJoinWorldEvent
+		if (player == null) {
+			TutorialMain.logger.error("Unable to process " + message.getClass().getSimpleName() + " on " + ctx.side.name() + ": player was NULL");
+			return null;
+		}
 		if (ctx.side.isClient()) {
-			return handleClientMessage(TutorialMain.proxy.getPlayerEntity(ctx), message, ctx);
+			return handleClientMessage(player, message, ctx);
 		} else {
-			return handleServerMessage(TutorialMain.proxy.getPlayerEntity(ctx), message, ctx);
+			return handleServerMessage(player, message, ctx);
 		}
 	}
 }

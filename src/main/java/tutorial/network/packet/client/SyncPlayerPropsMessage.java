@@ -72,12 +72,6 @@ public class SyncPlayerPropsMessage implements IMessage
 		@SideOnly(Side.CLIENT)
 		public IMessage handleClientMessage(EntityPlayer player, SyncPlayerPropsMessage message, MessageContext ctx) {
 			// now we can just load the NBTTagCompound data directly; one and done, folks
-			// Note that in 1.8 it is possible for the client player / properties to be null
-			// when receiving this packet upon first joining the world in EntityJoinWorldEvent
-			if (player == null) {
-				TutorialMain.logger.warn("Client player was NULL when SyncPlayerPropsMessage received");
-				return null;
-			}
 			if (ExtendedPlayer.get(player) == null) {
 				TutorialMain.logger.warn("Client extended properties were NULL when SyncPlayerPropsMessage received");
 			} else {
