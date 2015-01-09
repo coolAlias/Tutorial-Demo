@@ -123,6 +123,14 @@ public class PacketDispatcher
 	}
 
 	/**
+	 * Send this message to everyone.
+	 * See {@link SimpleNetworkWrapper#sendToAll(IMessage)}
+	 */
+	public static void sendToAll(IMessage message) {
+		PacketDispatcher.dispatcher.sendToAll(message);
+	}
+
+	/**
 	 * Send this message to everyone within a certain range of a point.
 	 * See {@link SimpleNetworkWrapper#sendToDimension(IMessage, NetworkRegistry.TargetPoint)}
 	 */
