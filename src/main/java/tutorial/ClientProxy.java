@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.IThreadListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -95,5 +96,10 @@ public class ClientProxy extends CommonProxy
 		// Solution is to double-check side before returning the player:
 		TutorialMain.logger.info("Retrieving player from ClientProxy for message on side " + ctx.side);
 		return (ctx.side.isClient() ? mc.thePlayer : super.getPlayerEntity(ctx));
+	}
+
+	@Override
+	public IThreadListener getThreadFromContext(MessageContext ctx) {
+		return (ctx.side.isClient() ? mc : super.getThreadFromContext(ctx));
 	}
 }

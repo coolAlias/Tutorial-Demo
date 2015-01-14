@@ -1,6 +1,7 @@
 package tutorial.network.packet;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -30,17 +31,22 @@ import tutorial.TutorialMain;
 public abstract class AbstractMessageHandler<T extends IMessage> implements IMessageHandler <T, IMessage>
 {
 	/**
+	 * Allows reply message to be set and returned during thread-checking
+	 */
+	private IMessage reply;
+
+	/**
 	 * Handle a message received on the client side
 	 * @return a message to send back to the Server, or null if no reply is necessary
 	 */
 	@SideOnly(Side.CLIENT)
-	public abstract IMessage handleClientMessage(EntityPlayer player, T message, MessageContext ctx);
+	protected abstract IMessage handleClientMessage(EntityPlayer player, T msg, MessageContext ctx);
 
 	/**
 	 * Handle a message received on the server side
 	 * @return a message to send back to the Client, or null if no reply is necessary
 	 */
-	public abstract IMessage handleServerMessage(EntityPlayer player, T message, MessageContext ctx);
+	protected abstract IMessage handleServerMessage(EntityPlayer player, T msg, MessageContext ctx);
 
 	/*
 	 * Here is where I parse the side and get the player to pass on to the abstract methods.
@@ -49,18 +55,50 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
 	 * available without a lengthy syntax.
 	 */
 	@Override
-	public IMessage onMessage(T message, MessageContext ctx) {
+	public IMessage onMessage(T msg, MessageContext ctx) {
+		// Note that in 1.8 the network is handled on a separate thread, meaning that
+		// the world, player, etc. may not be up-to-date when your message is received.
+		// if your message relies on the world being up-to-date (generally the case),
+		// you must wait for the main world thread:
+		return checkThreadAndEnqueue(msg, this, ctx);
+
+		// Otherwise, you can handle the message normally:
+		/*
 		EntityPlayer player = TutorialMain.proxy.getPlayerEntity(ctx);
-		// Note that in 1.8 it is possible for the client player / properties to be null
-		// when receiving this packet upon first joining the world in EntityJoinWorldEvent
-		if (player == null) {
-			TutorialMain.logger.error("Unable to process " + message.getClass().getSimpleName() + " on " + ctx.side.name() + ": player was NULL");
-			return null;
-		}
 		if (ctx.side.isClient()) {
-			return handleClientMessage(player, message, ctx);
+			return handleClientMessage(player, msg, ctx);
 		} else {
-			return handleServerMessage(player, message, ctx);
+			return handleServerMessage(player, msg, ctx);
 		}
+		 */
+	}
+
+	/**
+	 * Passes the handling off to handleClientMessage or handleServerMessage, depending on side
+	 */
+	private final IMessage processMessage(T msg, MessageContext ctx) {
+		EntityPlayer player = TutorialMain.proxy.getPlayerEntity(ctx);
+		if (ctx.side.isClient()) {
+			return handleClientMessage(player, msg, ctx);
+		} else {
+			return handleServerMessage(player, msg, ctx);
+		}
+	}
+
+	/**
+	 * Ensures that the message is being handled on the main thread
+	 * @return Optional reply message - see {@link IMessageHandler#onMessage}
+	 */
+	private static final IMessage checkThreadAndEnqueue(final IMessage msg, final AbstractMessageHandler handler, final MessageContext ctx) {
+		IThreadListener thread = TutorialMain.proxy.getThreadFromContext(ctx);
+		// pretty much copied straight from vanilla code, see {@link PacketThreadUtil#checkThreadAndEnqueue}
+		if (!thread.isCallingFromMinecraftThread()) {
+			thread.addScheduledTask(new Runnable() {
+				public void run() {
+					handler.reply = handler.processMessage(msg, ctx);
+				}
+			});
+		}
+		return handler.reply;
 	}
 }

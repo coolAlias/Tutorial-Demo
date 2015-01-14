@@ -9,7 +9,6 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import tutorial.entity.ExtendedPlayer;
 import tutorial.network.PacketDispatcher;
 import tutorial.network.packet.client.SyncPlayerPropsMessage;
@@ -29,14 +28,16 @@ public class TutEventHandler
 	/**
 	 * This event is on the FML bus
 	 */
+	/*
 	@SubscribeEvent
 	public void onPlayerLogIn(PlayerLoggedInEvent event) {
 		if (event.player instanceof EntityPlayerMP) {
-			// we need this because the client player will be null the first time a packet is sent from EntityJoinWorldEvent
+			// no longer needed because we can wait for the main thread before processing the packet
 			TutorialMain.logger.info("Player logged in, sending extended properties to client");
 			PacketDispatcher.sendTo(new SyncPlayerPropsMessage(event.player), (EntityPlayerMP) event.player);
 		}
 	}
+	*/
 
 	@SubscribeEvent
 	public void onJoinWorld(EntityJoinWorldEvent event) {

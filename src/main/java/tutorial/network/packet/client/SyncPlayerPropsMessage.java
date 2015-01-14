@@ -73,6 +73,8 @@ public class SyncPlayerPropsMessage implements IMessage
 		public IMessage handleClientMessage(EntityPlayer player, SyncPlayerPropsMessage message, MessageContext ctx) {
 			// now we can just load the NBTTagCompound data directly; one and done, folks
 			if (ExtendedPlayer.get(player) == null) {
+				// this should never be the case if you registered your properties and waited
+				// for the main world thread before processing your packet
 				TutorialMain.logger.warn("Client extended properties were NULL when SyncPlayerPropsMessage received");
 			} else {
 				TutorialMain.logger.info("Synchronizing extended properties data on CLIENT");
