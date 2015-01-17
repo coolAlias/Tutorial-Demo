@@ -58,8 +58,20 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 	public abstract boolean isValidOnSide(Side side);
 
 	/**
+	 * Return true to require this message to be processed on the main thread, ensuring
+	 * that the world and other objects are in a valid state.
+	 * WARNING: Only return false if you do not need the world object or will synchronize
+	 * on your own.
+	 */
+	protected boolean requiresMainThread() {
+		return true;
+	}
+
+	/**
 	 * Called on whichever side the message is received;
 	 * for bidirectional packets, be sure to check side
+	 * If {@link #requiresMainThread()} returns true, this method is guaranteed
+	 * to be called on the main Minecraft thread for this side.
 	 */
 	public abstract void process(EntityPlayer player, Side side);
 
@@ -101,7 +113,11 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 		// msg.process(TutorialMain.proxy.getPlayerEntity(ctx), ctx.side);
 
 		// 1.8:
-		checkThreadAndEnqueue(msg, ctx);
+		if (requiresMainThread()) {
+			checkThreadAndEnqueue(msg, ctx);
+		} else {
+			msg.process(TutorialMain.proxy.getPlayerEntity(ctx), ctx.side);
+		}
 		return null;
 	}
 
