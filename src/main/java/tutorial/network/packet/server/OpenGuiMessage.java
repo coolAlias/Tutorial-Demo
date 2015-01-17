@@ -1,17 +1,18 @@
 package tutorial.network.packet.server;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.relauncher.Side;
 import tutorial.TutorialMain;
+import tutorial.network.packet.AbstractMessage;
 
 /**
  * 
  * A simple message telling the server that the client wants to open a GUI.
  * 
  */
-public class OpenGuiMessage implements IMessage {
+public class OpenGuiMessage extends AbstractMessage<OpenGuiMessage>
+{
 	// this will store the id of the gui to open
 	private int id;
 
@@ -25,26 +26,28 @@ public class OpenGuiMessage implements IMessage {
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buffer) {
+	protected void read(PacketBuffer buffer) {
 		// basic Input/Output operations, very much like DataInputStream
 		id = buffer.readInt();
 	}
 
 	@Override
-	public void toBytes(ByteBuf buffer) {
+	protected void write(PacketBuffer buffer) {
 		// basic Input/Output operations, very much like DataOutputStream
 		buffer.writeInt(id);
 	}
-	
-	public static class Handler extends AbstractServerMessageHandler<OpenGuiMessage> {
-		@Override
-		public IMessage handleServerMessage(EntityPlayer player, OpenGuiMessage message, MessageContext ctx) {
-			// because we sent the gui's id with the packet, we can handle all cases with one line:
-			player.openGui(TutorialMain.instance, message.id, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
-			return null;
-		}
+
+	@Override
+	public boolean isValidOnSide(Side side) {
+		return side.isServer();
 	}
-	
+
+	@Override
+	public void process(EntityPlayer player, Side side) {
+		// using the message instance gives access to 'this.id'
+		player.openGui(TutorialMain.instance, this.id, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+	}
+
 	/**
 	 *
 	 * 'VANILLA' VERSION of the Message Handler
@@ -58,11 +61,11 @@ public class OpenGuiMessage implements IMessage {
 			// You could use ctx.getServerHandler().playerEntity directly, but using the
 			// the proxy method everywhere keeps you safe from mundane mistakes
 			EntityPlayer player = TutorialMain.proxy.getPlayerEntity(ctx);
-			
+
 			// because we sent the gui's id with the packet, we can handle all cases with one line:
 			player.openGui(TutorialMain.instance, message.id, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
 			return null;
 		}
 	}
-	*/
+	 */
 }

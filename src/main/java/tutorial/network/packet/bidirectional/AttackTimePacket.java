@@ -1,11 +1,11 @@
 package tutorial.network.packet.bidirectional;
 
-import io.netty.buffer.ByteBuf;
+import java.io.IOException;
+
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import tutorial.network.packet.AbstractMessageHandler;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.relauncher.Side;
+import tutorial.network.packet.AbstractMessage;
 
 /**
  * 
@@ -19,7 +19,7 @@ import tutorial.network.packet.AbstractMessageHandler;
  *
  */
 @Deprecated
-public class AttackTimePacket implements IMessage
+public class AttackTimePacket extends AbstractMessage<AttackTimePacket>
 {
 	private int attackTime;
 
@@ -30,29 +30,23 @@ public class AttackTimePacket implements IMessage
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buffer) {
+	protected void read(PacketBuffer buffer) throws IOException {
 		this.attackTime = buffer.readInt();
 	}
 
 	@Override
-	public void toBytes(ByteBuf buffer) {
+	protected void write(PacketBuffer buffer) throws IOException {
 		buffer.writeInt(attackTime);
 	}
 
-	/**
-	 * 
-	 * Since the handler implementation on both sides is identical, it is simplest
-	 * to use {@link AbstractBiMessageHandler#handleMessage}, rather than writing the same code
-	 * in both {@link AbstractMessageHandler#handleClientMessage} and {@link AbstractMessageHandler#handleServerMessage}.
-	 * 
-	 * Alternatively, one could implement {@link IMessageHandler} directly, but then we would
-	 * have to check for the main thread again before processing the packet
-	 *
-	 */
-	public static class Handler extends AbstractBiMessageHandler<AttackTimePacket> {
-		@Override
-		protected void handleMessage(EntityPlayer player, AttackTimePacket msg, MessageContext ctx) {
-			//player.attackTime = message.attackTime;
-		}
+	@Override
+	public boolean isValidOnSide(Side side) {
+		return true; // valid on both sides
+	}
+
+	@Override
+	public void process(EntityPlayer player, Side side) {
+		// Handled identially on both sides, so we don't need to check which side we're on
+		// player.attackTime = this.attackTime;
 	}
 }

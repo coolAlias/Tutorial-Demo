@@ -1,15 +1,14 @@
 package tutorial.network.packet.client;
 
-import io.netty.buffer.ByteBuf;
+import java.io.IOException;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import tutorial.TutorialMain;
 import tutorial.entity.ExtendedPlayer;
+import tutorial.network.packet.AbstractMessage;
 
 /**
  * 
@@ -29,7 +28,7 @@ import tutorial.entity.ExtendedPlayer;
  * those times when you need to send everything.
  *
  */
-public class SyncPlayerPropsMessage implements IMessage
+public class SyncPlayerPropsMessage extends AbstractMessage<SyncPlayerPropsMessage>
 //remember - the IMessageHandler will be implemented as a static inner class
 {
 	// Previously, we've been writing each field in our properties one at a time,
@@ -53,51 +52,24 @@ public class SyncPlayerPropsMessage implements IMessage
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buffer) {
-		// luckily, ByteBufUtils provides an easy way to read the NBT
-		data = ByteBufUtils.readTag(buffer);
+	protected void read(PacketBuffer buffer) throws IOException {
+		data = buffer.readNBTTagCompoundFromBuffer();
 	}
 
 	@Override
-	public void toBytes(ByteBuf buffer) {
-		// ByteBufUtils provides a convenient method for writing the compound
-		ByteBufUtils.writeTag(buffer, data);
+	protected void write(PacketBuffer buffer) throws IOException {
+		buffer.writeNBTTagCompoundToBuffer(data);
 	}
 
-	// Remember: this class MUST be static or you will crash
-	public static class Handler extends AbstractClientMessageHandler<SyncPlayerPropsMessage> {
-		// the fruits of our labor: we immediately know from the method name that we are handling
-		// a message on the client side, and we have our EntityPlayer right there ready for use. Awesome.
-		@Override
-		@SideOnly(Side.CLIENT)
-		protected void handleClientMessage(EntityPlayer player, SyncPlayerPropsMessage message, MessageContext ctx) {
-			// now we can just load the NBTTagCompound data directly; one and done, folks
-			if (ExtendedPlayer.get(player) == null) {
-				// this should never be the case if you registered your properties and waited
-				// for the main world thread before processing your packet
-				TutorialMain.logger.warn("Client extended properties were NULL when SyncPlayerPropsMessage received");
-			} else {
-				TutorialMain.logger.info("Synchronizing extended properties data on CLIENT");
-				ExtendedPlayer.get(player).loadNBTData(message.data);
-			}
-		}
-
-		// Note here that we don't (and can't) implement the handleServerMessage method
-		// since we extended AbstractClientMessage. This is exactly what we want.
+	@Override
+	public boolean isValidOnSide(Side side) {
+		return side.isClient();
 	}
-	/**
-	 *
-	 * 'VANILLA' VERSION of the Message Handler
-	 * Straight implementation without any of my personal 'improvements' :P 
-	 *
-	 */
-	/*
-	public static class Handler implements IMessageHandler<SyncPlayerPropsMessage, IMessage> {
-		@Override
-		public IMessage onMessage(SyncPlayerPropsMessage message, MessageContext ctx) {
-			EntityPlayer player = TutorialMain.proxy.getPlayerEntity(ctx);
-			ExtendedPlayer.get(player).loadNBTData(message.data);
-			return null;
-		}
-	}*/
+
+	@Override
+	public void process(EntityPlayer player, Side side) {
+		// now we can just load the NBTTagCompound data directly; one and done, folks
+		TutorialMain.logger.info("Synchronizing extended properties data on CLIENT");
+		ExtendedPlayer.get(player).loadNBTData(data);
+	}
 }
