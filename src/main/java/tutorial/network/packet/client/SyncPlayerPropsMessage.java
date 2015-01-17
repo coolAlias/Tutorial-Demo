@@ -70,7 +70,7 @@ public class SyncPlayerPropsMessage implements IMessage
 		// a message on the client side, and we have our EntityPlayer right there ready for use. Awesome.
 		@Override
 		@SideOnly(Side.CLIENT)
-		public IMessage handleClientMessage(EntityPlayer player, SyncPlayerPropsMessage message, MessageContext ctx) {
+		protected void handleClientMessage(EntityPlayer player, SyncPlayerPropsMessage message, MessageContext ctx) {
 			// now we can just load the NBTTagCompound data directly; one and done, folks
 			if (ExtendedPlayer.get(player) == null) {
 				// this should never be the case if you registered your properties and waited
@@ -80,7 +80,6 @@ public class SyncPlayerPropsMessage implements IMessage
 				TutorialMain.logger.info("Synchronizing extended properties data on CLIENT");
 				ExtendedPlayer.get(player).loadNBTData(message.data);
 			}
-			return null;
 		}
 
 		// Note here that we don't (and can't) implement the handleServerMessage method

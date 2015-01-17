@@ -13,22 +13,19 @@ import tutorial.network.packet.AbstractMessageHandler;
  */
 public abstract class AbstractBiMessageHandler<T extends IMessage> extends AbstractMessageHandler<T>
 {
-	@Override
-	protected IMessage handleClientMessage(EntityPlayer player, T msg, MessageContext ctx) {
-		return handleMessage(player, msg, ctx);
-	}
-
-	@Override
-	protected IMessage handleServerMessage(EntityPlayer player, T msg, MessageContext ctx) {
-		return handleMessage(player, msg, ctx);
-	}
-
 	/**
 	 * Called by both handleClientMessage and handleServerMessage unless they are overridden.
 	 * Most useful for messages with identical handling on either side
-	 * @return Reply message, if any
 	 */
-	protected IMessage handleMessage(EntityPlayer player, T msg, MessageContext ctx) {
-		return null;
+	protected void handleMessage(EntityPlayer player, T msg, MessageContext ctx) {}
+
+	@Override
+	protected void handleClientMessage(EntityPlayer player, T msg, MessageContext ctx) {
+		handleMessage(player, msg, ctx);
+	}
+
+	@Override
+	protected void handleServerMessage(EntityPlayer player, T msg, MessageContext ctx) {
+		handleMessage(player, msg, ctx);
 	}
 }

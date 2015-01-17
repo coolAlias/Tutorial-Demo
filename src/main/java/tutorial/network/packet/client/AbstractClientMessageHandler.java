@@ -14,7 +14,6 @@ import tutorial.network.packet.AbstractMessageHandler;
 public abstract class AbstractClientMessageHandler<T extends IMessage> extends AbstractMessageHandler<T> {
 	// implementing a final version of the server message handler both prevents it from
 	// appearing automatically and prevents us from ever accidentally overriding it
-	protected final IMessage handleServerMessage(EntityPlayer player, T message, MessageContext ctx) {
-		return null;
-	}
+	protected final void handleServerMessage(EntityPlayer player, T msg, MessageContext ctx) {}
+
 }

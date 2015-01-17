@@ -100,17 +100,15 @@ public class PlaySoundPacket implements IMessage
 	 */
 	public static class Handler extends AbstractBiMessageHandler<PlaySoundPacket> {
 		@Override
-		public IMessage handleClientMessage(EntityPlayer player, PlaySoundPacket message, MessageContext ctx) {
+		protected void handleClientMessage(EntityPlayer player, PlaySoundPacket message, MessageContext ctx) {
 			// this method ONLY works on the client - if you use it on the server, no sound will play
 			player.playSound(message.sound, message.volume, message.pitch);
-			return null;
 		}
 
 		@Override
-		public IMessage handleServerMessage(EntityPlayer player, PlaySoundPacket message, MessageContext ctx) {
+		protected void handleServerMessage(EntityPlayer player, PlaySoundPacket message, MessageContext ctx) {
 			// this method ONLY works on the server - if you use it on the client, no sound will play
 			player.worldObj.playSoundEffect(message.x, message.y, message.z, message.sound, message.volume, message.pitch);
-			return null;
 		}
 	}
 }

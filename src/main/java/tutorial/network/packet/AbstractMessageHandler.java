@@ -31,22 +31,15 @@ import tutorial.TutorialMain;
 public abstract class AbstractMessageHandler<T extends IMessage> implements IMessageHandler <T, IMessage>
 {
 	/**
-	 * Allows reply message to be set and returned during thread-checking
-	 */
-	private IMessage reply;
-
-	/**
 	 * Handle a message received on the client side
-	 * @return a message to send back to the Server, or null if no reply is necessary
 	 */
 	@SideOnly(Side.CLIENT)
-	protected abstract IMessage handleClientMessage(EntityPlayer player, T msg, MessageContext ctx);
+	protected abstract void handleClientMessage(EntityPlayer player, T msg, MessageContext ctx);
 
 	/**
 	 * Handle a message received on the server side
-	 * @return a message to send back to the Client, or null if no reply is necessary
 	 */
-	protected abstract IMessage handleServerMessage(EntityPlayer player, T msg, MessageContext ctx);
+	protected abstract void handleServerMessage(EntityPlayer player, T msg, MessageContext ctx);
 
 	/*
 	 * Here is where I parse the side and get the player to pass on to the abstract methods.
@@ -60,15 +53,16 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
 		// the world, player, etc. may not be up-to-date when your message is received.
 		// if your message relies on the world being up-to-date (generally the case),
 		// you must wait for the main world thread:
-		return checkThreadAndEnqueue(msg, this, ctx);
+		checkThreadAndEnqueue(msg, this, ctx);
+		return null; // on one ever uses these anyway - just send any required messages during processing
 
 		// Otherwise, you can handle the message normally:
 		/*
 		EntityPlayer player = TutorialMain.proxy.getPlayerEntity(ctx);
 		if (ctx.side.isClient()) {
-			return handleClientMessage(player, msg, ctx);
+			handleClientMessage(player, msg, ctx);
 		} else {
-			return handleServerMessage(player, msg, ctx);
+			handleServerMessage(player, msg, ctx);
 		}
 		 */
 	}
@@ -76,29 +70,27 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
 	/**
 	 * Passes the handling off to handleClientMessage or handleServerMessage, depending on side
 	 */
-	private final IMessage processMessage(T msg, MessageContext ctx) {
+	private final void processMessage(T msg, MessageContext ctx) {
 		EntityPlayer player = TutorialMain.proxy.getPlayerEntity(ctx);
 		if (ctx.side.isClient()) {
-			return handleClientMessage(player, msg, ctx);
+			handleClientMessage(player, msg, ctx);
 		} else {
-			return handleServerMessage(player, msg, ctx);
+			handleServerMessage(player, msg, ctx);
 		}
 	}
 
 	/**
 	 * Ensures that the message is being handled on the main thread
-	 * @return Optional reply message - see {@link IMessageHandler#onMessage}
 	 */
-	private static final IMessage checkThreadAndEnqueue(final IMessage msg, final AbstractMessageHandler handler, final MessageContext ctx) {
+	private static final void checkThreadAndEnqueue(final IMessage msg, final AbstractMessageHandler handler, final MessageContext ctx) {
 		IThreadListener thread = TutorialMain.proxy.getThreadFromContext(ctx);
 		// pretty much copied straight from vanilla code, see {@link PacketThreadUtil#checkThreadAndEnqueue}
 		if (!thread.isCallingFromMinecraftThread()) {
 			thread.addScheduledTask(new Runnable() {
 				public void run() {
-					handler.reply = handler.processMessage(msg, ctx);
+					handler.processMessage(msg, ctx);
 				}
 			});
 		}
-		return handler.reply;
 	}
 }

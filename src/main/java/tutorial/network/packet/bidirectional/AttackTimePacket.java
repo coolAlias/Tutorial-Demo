@@ -51,9 +51,8 @@ public class AttackTimePacket implements IMessage
 	 */
 	public static class Handler extends AbstractBiMessageHandler<AttackTimePacket> {
 		@Override
-		protected IMessage handleMessage(EntityPlayer player, AttackTimePacket msg, MessageContext ctx) {
+		protected void handleMessage(EntityPlayer player, AttackTimePacket msg, MessageContext ctx) {
 			//player.attackTime = message.attackTime;
-			return null;
 		}
 	}
 }
