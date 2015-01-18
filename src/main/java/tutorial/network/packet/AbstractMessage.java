@@ -55,7 +55,7 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 	 * If message is sent to the wrong side, an exception will be thrown during handling
 	 * @return True if the message is allowed to be handled on the given side
 	 */
-	public abstract boolean isValidOnSide(Side side);
+	protected abstract boolean isValidOnSide(Side side);
 
 	/**
 	 * Called on whichever side the message is received;

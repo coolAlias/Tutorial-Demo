@@ -40,7 +40,7 @@ public class AttackTimePacket extends AbstractMessage<AttackTimePacket>
 	}
 
 	@Override
-	public boolean isValidOnSide(Side side) {
+	protected boolean isValidOnSide(Side side) {
 		return true; // valid on both sides
 	}
 

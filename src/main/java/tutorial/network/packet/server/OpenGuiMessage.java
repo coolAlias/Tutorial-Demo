@@ -38,7 +38,7 @@ public class OpenGuiMessage extends AbstractMessage<OpenGuiMessage>
 	}
 
 	@Override
-	public boolean isValidOnSide(Side side) {
+	protected boolean isValidOnSide(Side side) {
 		return side.isServer();
 	}
 

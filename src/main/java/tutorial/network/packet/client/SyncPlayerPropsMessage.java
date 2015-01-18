@@ -62,7 +62,7 @@ public class SyncPlayerPropsMessage extends AbstractMessage<SyncPlayerPropsMessa
 	}
 
 	@Override
-	public boolean isValidOnSide(Side side) {
+	protected boolean isValidOnSide(Side side) {
 		return side.isClient();
 	}
 
