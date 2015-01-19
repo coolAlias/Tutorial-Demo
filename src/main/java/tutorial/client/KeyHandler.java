@@ -8,7 +8,7 @@ import org.lwjgl.input.Keyboard;
 
 import tutorial.TutorialMain;
 import tutorial.network.PacketDispatcher;
-import tutorial.network.packet.server.OpenGuiMessage;
+import tutorial.network.server.OpenGuiMessage;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;

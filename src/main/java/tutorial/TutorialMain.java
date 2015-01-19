@@ -78,11 +78,6 @@ public final class TutorialMain
 
 	// ARMOR MATERIALS
 	public static final ArmorMaterial armorWool = EnumHelper.addArmorMaterial("Wool", 5, new int[] {1,2,1,1}, 30);
-	/*
-	@EventHandler
-	public void onServerStarting(FMLServerStartingEvent event) {
-
-	} */
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

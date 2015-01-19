@@ -9,7 +9,7 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import tutorial.entity.ExtendedPlayer;
 import tutorial.network.PacketDispatcher;
-import tutorial.network.packet.client.SyncPlayerPropsMessage;
+import tutorial.network.client.SyncPlayerPropsMessage;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class TutEventHandler

@@ -1,12 +1,13 @@
-package tutorial.network.packet.bidirectional;
+package tutorial.network.bidirectional;
 
-import io.netty.buffer.ByteBuf;
+import java.io.IOException;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
+import tutorial.network.AbstractMessage;
 import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * 
@@ -22,7 +23,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
  * nearby should hear - simply send this packet to the server and voilá.
  *
  */
-public class PlaySoundPacket implements IMessage
+public class PlaySoundPacket extends AbstractMessage<PlaySoundPacket>
 {
 	private String sound;
 
@@ -61,7 +62,7 @@ public class PlaySoundPacket implements IMessage
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buffer) {
+	protected void read(PacketBuffer buffer) throws IOException {
 		sound = ByteBufUtils.readUTF8String(buffer);
 		volume = buffer.readFloat();
 		pitch = buffer.readFloat();
@@ -71,7 +72,7 @@ public class PlaySoundPacket implements IMessage
 	}
 
 	@Override
-	public void toBytes(ByteBuf buffer) {
+	protected void write(PacketBuffer buffer) throws IOException {
 		ByteBufUtils.writeUTF8String(buffer, sound);
 		buffer.writeFloat(volume);
 		buffer.writeFloat(pitch);
@@ -80,37 +81,19 @@ public class PlaySoundPacket implements IMessage
 		buffer.writeDouble(z);
 	}
 
-	/**
-	 * 
-	 * Here, I use {@link AbstractBiMessageHandler} instead of {@link IMessageHandler} because
-	 * the message is handled slightly differently depending on side, but it could just as well
-	 * be implemented using IMessageHandler#onMessage:
-	 * 
-	 *	@Override
-	 * 	public IMessage onMessage(ActivateSkillPacket message, MessageContext ctx) {
-	 *		EntityPlayer player = TutorialMain.proxy.getPlayerEntity(ctx);
-	 *		if (ctx.side.isClient()) {
-	 *			player.playSound(message.sound, message.volume, message.pitch);
-	 *		} else {
-	 *			player.worldObj.playSoundEffect(message.x, message.y, message.z, message.sound, message.volume, message.pitch);
-	 *		}
-	 *		return null;
-	 *	}
-	 *
-	 */
-	public static class Handler extends AbstractBiMessageHandler<PlaySoundPacket> {
-		@Override
-		public IMessage handleClientMessage(EntityPlayer player, PlaySoundPacket message, MessageContext ctx) {
-			// this method ONLY works on the client - if you use it on the server, no sound will play
-			player.playSound(message.sound, message.volume, message.pitch);
-			return null;
-		}
+	@Override
+	protected boolean isValidOnSide(Side side) {
+		return true;
+	}
 
-		@Override
-		public IMessage handleServerMessage(EntityPlayer player, PlaySoundPacket message, MessageContext ctx) {
-			// this method ONLY works on the server - if you use it on the client, no sound will play
-			player.worldObj.playSoundEffect(message.x, message.y, message.z, message.sound, message.volume, message.pitch);
-			return null;
+	@Override
+	public void process(EntityPlayer player, Side side) {
+		if (side.isClient()) {
+			// Plays a sound only the client can hear
+			player.playSound(sound, volume, pitch);
+		} else {
+			// Plays a sound that everyone nearby can hear
+			player.worldObj.playSoundEffect(x, y, z, sound, volume, pitch);
 		}
 	}
 }
