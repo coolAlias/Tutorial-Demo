@@ -17,9 +17,9 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.0"
+version = "1.0"
 group = "com.google.coolalias.modid" 
-archivesBaseName = "tutorial"
+archivesBaseName = "1.7.10-tutorial"
 
 minecraft {
     version = "1.7.10-10.13.2.1236"
