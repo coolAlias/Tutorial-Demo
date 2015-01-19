@@ -1,4 +1,4 @@
-package tutorial.network.packet;
+package tutorial.network;
 
 import io.netty.buffer.ByteBuf;
 

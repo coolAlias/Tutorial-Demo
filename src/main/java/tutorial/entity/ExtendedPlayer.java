@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import tutorial.inventory.InventoryCustomPlayer;
 import tutorial.network.PacketDispatcher;
-import tutorial.network.packet.client.SyncPlayerPropsMessage;
+import tutorial.network.client.SyncPlayerPropsMessage;
 
 public class ExtendedPlayer implements IExtendedEntityProperties
 {

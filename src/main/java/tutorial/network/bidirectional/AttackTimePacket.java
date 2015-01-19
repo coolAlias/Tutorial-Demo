@@ -1,11 +1,11 @@
-package tutorial.network.packet.bidirectional;
+package tutorial.network.bidirectional;
 
 import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
-import tutorial.network.packet.AbstractMessage;
+import tutorial.network.AbstractMessage;
 
 /**
  * 

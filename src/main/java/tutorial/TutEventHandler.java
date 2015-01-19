@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tutorial.entity.ExtendedPlayer;
 import tutorial.network.PacketDispatcher;
-import tutorial.network.packet.client.SyncPlayerPropsMessage;
+import tutorial.network.client.SyncPlayerPropsMessage;
 
 public class TutEventHandler
 {

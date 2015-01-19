@@ -8,11 +8,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import tutorial.TutorialMain;
-import tutorial.network.packet.AbstractMessage;
-import tutorial.network.packet.bidirectional.AttackTimePacket;
-import tutorial.network.packet.bidirectional.PlaySoundPacket;
-import tutorial.network.packet.client.SyncPlayerPropsMessage;
-import tutorial.network.packet.server.OpenGuiMessage;
+import tutorial.network.bidirectional.AttackTimePacket;
+import tutorial.network.bidirectional.PlaySoundPacket;
+import tutorial.network.client.SyncPlayerPropsMessage;
+import tutorial.network.server.OpenGuiMessage;
 
 
 /**

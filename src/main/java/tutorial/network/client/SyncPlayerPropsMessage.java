@@ -1,4 +1,4 @@
-package tutorial.network.packet.client;
+package tutorial.network.client;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 import tutorial.TutorialMain;
 import tutorial.entity.ExtendedPlayer;
-import tutorial.network.packet.AbstractMessage;
+import tutorial.network.AbstractMessage;
 
 /**
  * 
