@@ -40,13 +40,8 @@ public class AttackTimePacket extends AbstractMessage<AttackTimePacket>
 	}
 
 	@Override
-	protected boolean isValidOnSide(Side side) {
-		return true; // valid on both sides
-	}
-
-	@Override
 	public void process(EntityPlayer player, Side side) {
-		// Handled identially on both sides, so we don't need to check which side we're on
-		// player.attackTime = this.attackTime;
+		// Handled identically on both sides, so we don't need to check which side we're on
+		// player.attackTime = this.attackTime; // does not exist in 1.8
 	}
 }

@@ -52,18 +52,20 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 	protected abstract void write(PacketBuffer buffer) throws IOException;
 
 	/**
-	 * If message is sent to the wrong side, an exception will be thrown during handling
-	 * @return True if the message is allowed to be handled on the given side
-	 */
-	protected abstract boolean isValidOnSide(Side side);
-
-	/**
 	 * Called on whichever side the message is received;
 	 * for bidirectional packets, be sure to check side
 	 * If {@link #requiresMainThread()} returns true, this method is guaranteed
 	 * to be called on the main Minecraft thread for this side.
 	 */
 	public abstract void process(EntityPlayer player, Side side);
+
+	/**
+	 * If message is sent to the wrong side, an exception will be thrown during handling
+	 * @return True if the message is allowed to be handled on the given side
+	 */
+	protected boolean isValidOnSide(Side side) {
+		return true; // default allows handling on both sides, i.e. a bidirectional packet
+	}
 
 	/**
 	 * Whether this message requires the main thread to be processed (i.e. it
@@ -127,6 +129,28 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 					msg.process(TutorialMain.proxy.getPlayerEntity(ctx), ctx.side);
 				}
 			});
+		}
+	}
+
+	/**
+	 * Messages that can only be sent from the server to the client should use this class
+	 */
+	// You can add generics if you want, or if you plan to use SimpleNetworkWrapper#registerMessage directly
+	public static abstract class AbstractClientMessage<T extends AbstractMessage<T>> extends AbstractMessage<T> {
+		@Override
+		protected final boolean isValidOnSide(Side side) {
+			return side.isClient();
+		}
+	}
+
+	/**
+	 * Messages that can only be sent from the client to the server should use this class
+	 */
+	// Or you can leave off the generics if using PacketDispatcher#registerMessage
+	public static abstract class AbstractServerMessage extends AbstractMessage {
+		@Override
+		protected final boolean isValidOnSide(Side side) {
+			return side.isServer();
 		}
 	}
 }

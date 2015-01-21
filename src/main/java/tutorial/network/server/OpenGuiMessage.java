@@ -4,14 +4,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 import tutorial.TutorialMain;
-import tutorial.network.AbstractMessage;
+import tutorial.network.AbstractMessage.AbstractServerMessage;
 
 /**
  * 
  * A simple message telling the server that the client wants to open a GUI.
  * 
  */
-public class OpenGuiMessage extends AbstractMessage<OpenGuiMessage>
+public class OpenGuiMessage extends AbstractServerMessage
 {
 	// this will store the id of the gui to open
 	private int id;
@@ -35,11 +35,6 @@ public class OpenGuiMessage extends AbstractMessage<OpenGuiMessage>
 	protected void write(PacketBuffer buffer) {
 		// basic Input/Output operations, very much like DataOutputStream
 		buffer.writeInt(id);
-	}
-
-	@Override
-	protected boolean isValidOnSide(Side side) {
-		return side.isServer();
 	}
 
 	@Override

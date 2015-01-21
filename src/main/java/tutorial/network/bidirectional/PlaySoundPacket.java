@@ -82,12 +82,8 @@ public class PlaySoundPacket extends AbstractMessage<PlaySoundPacket>
 	}
 
 	@Override
-	protected boolean isValidOnSide(Side side) {
-		return true;
-	}
-
-	@Override
 	public void process(EntityPlayer player, Side side) {
+		// Since this packet is handled differently, we need to check side
 		if (side.isClient()) {
 			// Plays a sound only the client can hear
 			player.playSound(sound, volume, pitch);
