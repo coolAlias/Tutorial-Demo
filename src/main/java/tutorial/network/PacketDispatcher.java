@@ -13,20 +13,21 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 
+
 /**
- *
+ * 
  * This class will house the SimpleNetworkWrapper instance, which I will name 'dispatcher',
  * as well as give us a logical place from which to register our packets. These two things
  * could be done anywhere, however, even in your Main class, but I will be adding other
- * functionality (see below) that gives this class a bit more utility.
- *
+ * functionality (see below) that gives this class a bit more utility. 
+ * 
  * While unnecessary, I'm going to turn this class into a 'wrapper' for SimpleNetworkWrapper
  * so that instead of writing "PacketDispatcher.dispatcher.{method}" I can simply write
  * "PacketDispatcher.{method}" All this does is make it quicker to type and slightly shorter;
  * if you do not care about that, then make the 'dispatcher' field public instead of private,
  * or, if you do not want to add a new class just for one field and one static method that
  * you could put anywhere, feel free to put them wherever.
- *
+ * 
  * For further convenience, I have also added two extra sendToAllAround methods: one which
  * takes an EntityPlayer and one which takes coordinates.
  *
@@ -47,37 +48,54 @@ public class PacketDispatcher
 	 * Call this during pre-init or loading and register all of your packets (messages) here
 	 */
 	public static final void registerPackets() {
-		// Using an incrementing field instead of hard-coded numerals, I don't need to think
-		// about what number comes next or if I missed on should I ever rearrange the order
-		// of registration (for instance, if you wanted to alphabetize them... yeah...)
-		// It's even easier if you create a convenient 'registerMessage' method:
-		registerMessage(OpenGuiMessage.class, Side.SERVER);
-		registerMessage(SyncPlayerPropsMessage.class, Side.CLIENT);
+		// Packets handled on CLIENT
+		registerMessage(SyncPlayerPropsMessage.class);
 
-		// If you don't want to make a 'registerMessage' method, you can do it directly:
-		//PacketDispatcher.dispatcher.registerMessage(OpenGuiMessage.Handler.class, OpenGuiMessage.class, packetId++, Side.SERVER);
-		//PacketDispatcher.dispatcher.registerMessage(SyncPlayerPropsMessage.Handler.class, SyncPlayerPropsMessage.class, packetId++, Side.CLIENT);
+		// Packets handled on SERVER
+		registerMessage(OpenGuiMessage.class);
 
-		/** The following two packets are not used in this demo, but have been used in my other mods */
-		/** I include them here simply for the sake of demonstrating packets that can be sent to both sides */
+		// If you don't want to make a 'registerMessage' method, you can do it directly,
+		// but then you'd have to add a bunch more generics to the AbstractMessage and
+		// each message class:
+
+		// public static abstract class AbstractClientMessage<T extends AbstractMessage<T>> extends AbstractMessage<T>
+		// public class SyncPlayerPropsMessage extends AbstractClientMessage<SyncPlayerPropsMessage>
+
+		// Note that you could add those generics anyway with my implementation, or you can
+		// leave them off - either way works, but they must be there to use SNW's method directly:
+
+		// Works because I added the generics for this one:
+		PacketDispatcher.dispatcher.registerMessage(SyncPlayerPropsMessage.class, SyncPlayerPropsMessage.class, packetId++, Side.CLIENT);
+
+		// This one gives an error because I didn't, but it still can use my registration method
+		PacketDispatcher.dispatcher.registerMessage(OpenGuiMessage.class, OpenGuiMessage.class, packetId++, Side.SERVER);
+
+		// The following two packets are not used in this demo, but have been used in my other mods
+		// I include them here simply for the sake of demonstrating packets that can be sent to both sides
+
 		// Bidirectional packets:
 		registerMessage(PlaySoundPacket.class);
 		registerMessage(AttackTimePacket.class);
 	}
 
 	/**
-	 * Registers an AbstractMessage to one side
-	 */
-	private static final <T extends AbstractMessage<T> & IMessageHandler<T, IMessage>> void registerMessage(Class<T> clazz, Side side) {
-		PacketDispatcher.dispatcher.registerMessage(clazz, clazz, packetId++, side);
-	}
-
-	/**
-	 * Registers an AbstractMessage to both sides (bidirectional message)
+	 * Registers an {@link AbstractMessage} to the appropriate side(s)
 	 */
 	private static final <T extends AbstractMessage<T> & IMessageHandler<T, IMessage>> void registerMessage(Class<T> clazz) {
-		PacketDispatcher.dispatcher.registerMessage(clazz, clazz, packetId, Side.CLIENT);
-		PacketDispatcher.dispatcher.registerMessage(clazz, clazz, packetId++, Side.SERVER);
+		// We can tell by the message class which side to register it on by using #isAssignableFrom (google it)
+
+		// Also, one can see the convenience of using a static counter 'packetId' to keep
+		// track of the current index, rather than hard-coding them all, plus it's one less
+		// parameter to pass.
+		if (AbstractMessage.AbstractClientMessage.class.isAssignableFrom(clazz)) {
+			PacketDispatcher.dispatcher.registerMessage(clazz, clazz, packetId++, Side.CLIENT);
+		} else if (AbstractMessage.AbstractServerMessage.class.isAssignableFrom(clazz)) {
+			PacketDispatcher.dispatcher.registerMessage(clazz, clazz, packetId++, Side.SERVER);
+		} else {
+			// hopefully you didn't forget to extend the right class, or you will get registered on both sides
+			PacketDispatcher.dispatcher.registerMessage(clazz, clazz, packetId, Side.CLIENT);
+			PacketDispatcher.dispatcher.registerMessage(clazz, clazz, packetId++, Side.SERVER);
+		}
 	}
 
 	//========================================================//
@@ -87,7 +105,7 @@ public class PacketDispatcher
 	//========================================================//
 
 	/**
-	 * Send this message to the specified player.
+	 * Send this message to the specified player's client-side counterpart.
 	 * See {@link SimpleNetworkWrapper#sendTo(IMessage, EntityPlayerMP)}
 	 */
 	public static final void sendTo(IMessage message, EntityPlayerMP player) {
@@ -104,7 +122,7 @@ public class PacketDispatcher
 
 	/**
 	 * Send this message to everyone within a certain range of a point.
-	 * See {@link SimpleNetworkWrapper#sendToDimension(IMessage, NetworkRegistry.TargetPoint)}
+	 * See {@link SimpleNetworkWrapper#sendToAllAround(IMessage, NetworkRegistry.TargetPoint)}
 	 */
 	public static final void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point) {
 		PacketDispatcher.dispatcher.sendToAllAround(message, point);
@@ -112,6 +130,7 @@ public class PacketDispatcher
 
 	/**
 	 * Sends a message to everyone within a certain range of the coordinates in the same dimension.
+	 * Shortcut to {@link SimpleNetworkWrapper#sendToAllAround(IMessage, NetworkRegistry.TargetPoint)}
 	 */
 	public static final void sendToAllAround(IMessage message, int dimension, double x, double y, double z, double range) {
 		PacketDispatcher.sendToAllAround(message, new NetworkRegistry.TargetPoint(dimension, x, y, z, range));
@@ -119,6 +138,7 @@ public class PacketDispatcher
 
 	/**
 	 * Sends a message to everyone within a certain range of the player provided.
+	 * Shortcut to {@link SimpleNetworkWrapper#sendToAllAround(IMessage, NetworkRegistry.TargetPoint)}
 	 */
 	public static final void sendToAllAround(IMessage message, EntityPlayer player, double range) {
 		PacketDispatcher.sendToAllAround(message, player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, range);

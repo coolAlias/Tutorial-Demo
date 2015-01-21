@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import tutorial.entity.ExtendedPlayer;
-import tutorial.network.AbstractMessage;
+import tutorial.network.AbstractMessage.AbstractClientMessage;
 import cpw.mods.fml.relauncher.Side;
 
 /**
@@ -27,8 +27,8 @@ import cpw.mods.fml.relauncher.Side;
  * those times when you need to send everything.
  *
  */
-public class SyncPlayerPropsMessage extends AbstractMessage
-//remember - the IMessageHandler will be implemented as a static inner class
+// Added generics to this class so it can use SimpleNetworkWrapper#registerMessage
+public class SyncPlayerPropsMessage extends AbstractClientMessage<SyncPlayerPropsMessage>
 {
 	// Previously, we've been writing each field in our properties one at a time,
 	// but that is really annoying, and we've already done it in the save and load
@@ -58,11 +58,6 @@ public class SyncPlayerPropsMessage extends AbstractMessage
 	@Override
 	protected void write(PacketBuffer buffer) throws IOException {
 		buffer.writeNBTTagCompoundToBuffer(data);
-	}
-
-	@Override
-	protected boolean isValidOnSide(Side side) {
-		return side.isClient();
 	}
 
 	@Override
