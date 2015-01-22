@@ -105,7 +105,6 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 	/**
 	 * Messages that can only be sent from the server to the client should use this class
 	 */
-	// You can add generics if you want, or if you plan to use SimpleNetworkWrapper#registerMessage directly
 	public static abstract class AbstractClientMessage<T extends AbstractMessage<T>> extends AbstractMessage<T> {
 		@Override
 		protected final boolean isValidOnSide(Side side) {
@@ -116,8 +115,7 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 	/**
 	 * Messages that can only be sent from the client to the server should use this class
 	 */
-	// Or you can leave off the generics if using PacketDispatcher#registerMessage
-	public static abstract class AbstractServerMessage extends AbstractMessage {
+	public static abstract class AbstractServerMessage<T extends AbstractMessage<T>> extends AbstractMessage<T> {
 		@Override
 		protected final boolean isValidOnSide(Side side) {
 			return side.isServer();
