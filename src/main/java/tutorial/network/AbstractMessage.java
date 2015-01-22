@@ -118,7 +118,7 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
 	/**
 	 * 1.8 ONLY: Ensures that the message is being handled on the main thread
 	 */
-	private static final void checkThreadAndEnqueue(final AbstractMessage msg, final MessageContext ctx) {
+	private static final <T extends AbstractMessage<T>> void checkThreadAndEnqueue(final AbstractMessage<T> msg, final MessageContext ctx) {
 		IThreadListener thread = TutorialMain.proxy.getThreadFromContext(ctx);
 		// pretty much copied straight from vanilla code, see {@link PacketThreadUtil#checkThreadAndEnqueue}
 		if (!thread.isCallingFromMinecraftThread()) {
