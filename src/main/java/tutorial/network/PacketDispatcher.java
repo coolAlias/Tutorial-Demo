@@ -54,21 +54,9 @@ public class PacketDispatcher
 		// Packets handled on SERVER
 		registerMessage(OpenGuiMessage.class);
 
-		// If you don't want to make a 'registerMessage' method, you can do it directly,
-		// but then you'd have to add a bunch more generics to the AbstractMessage and
-		// each message class:
-
-		// public static abstract class AbstractClientMessage<T extends AbstractMessage<T>> extends AbstractMessage<T>
-		// public class SyncPlayerPropsMessage extends AbstractClientMessage<SyncPlayerPropsMessage>
-
-		// Note that you could add those generics anyway with my implementation, or you can
-		// leave them off - either way works, but they must be there to use SNW's method directly:
-
-		// Works because I added the generics for this one:
-		PacketDispatcher.dispatcher.registerMessage(SyncPlayerPropsMessage.class, SyncPlayerPropsMessage.class, packetId++, Side.CLIENT);
-
-		// This one gives an error because I didn't, but it still can use my registration method
-		PacketDispatcher.dispatcher.registerMessage(OpenGuiMessage.class, OpenGuiMessage.class, packetId++, Side.SERVER);
+		// If you don't want to make a 'registerMessage' method, you can do it directly:
+		//PacketDispatcher.dispatcher.registerMessage(SyncPlayerPropsMessage.class, SyncPlayerPropsMessage.class, packetId++, Side.CLIENT);
+		//PacketDispatcher.dispatcher.registerMessage(OpenGuiMessage.class, OpenGuiMessage.class, packetId++, Side.SERVER);
 
 		// The following two packets are not used in this demo, but have been used in my other mods
 		// I include them here simply for the sake of demonstrating packets that can be sent to both sides

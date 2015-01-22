@@ -28,7 +28,6 @@ import tutorial.network.AbstractMessage.AbstractClientMessage;
  * those times when you need to send everything.
  *
  */
-// Added generics to this class so it can use SimpleNetworkWrapper#registerMessage
 public class SyncPlayerPropsMessage extends AbstractClientMessage<SyncPlayerPropsMessage>
 {
 	// Previously, we've been writing each field in our properties one at a time,

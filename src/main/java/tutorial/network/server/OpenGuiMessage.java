@@ -11,7 +11,7 @@ import tutorial.network.AbstractMessage.AbstractServerMessage;
  * A simple message telling the server that the client wants to open a GUI.
  * 
  */
-public class OpenGuiMessage extends AbstractServerMessage
+public class OpenGuiMessage extends AbstractServerMessage<OpenGuiMessage>
 {
 	// this will store the id of the gui to open
 	private int id;
