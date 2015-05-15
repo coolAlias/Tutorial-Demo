@@ -32,7 +32,7 @@ public class ItemMagicBag extends BaseModItem
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		if (!world.isRemote) {
 			if (!player.isSneaking()) {
-				player.openGui(TutorialMain.instance, TutorialMain.GUI_ITEM_INV, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+				player.openGui(TutorialMain.instance, TutorialMain.GUI_ITEM_INV, player.worldObj, 0, 0, 0);
 			} else {
 				new InventoryMagicBag(player.getHeldItem()).setInventorySlotContents(0, new ItemStack(Items.diamond, 4));
 			}
