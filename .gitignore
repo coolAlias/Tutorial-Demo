@@ -216,3 +216,8 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+/logs
+/mods
+/saves
+/options.txt
+/usernamecache.json
