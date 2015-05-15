@@ -11,8 +11,13 @@ import tutorial.item.ItemUseMana;
 public class ContainerCustomPlayer extends Container
 {
 	/** Avoid magic numbers! This will greatly reduce the chance of you making errors in 'transferStackInSlot' method */
-	private static final int ARMOR_START = InventoryCustomPlayer.INV_SIZE, ARMOR_END = ARMOR_START+3,
-			INV_START = ARMOR_END+1, INV_END = INV_START+26, HOTBAR_START = INV_END+1, HOTBAR_END = HOTBAR_START+8;
+	private static final int
+	ARMOR_START = InventoryCustomPlayer.INV_SIZE, // INV_SIZE = 2, so slots 0 and 1 are the custom inventory, armor starts at the next slot (i.e. 2)
+	ARMOR_END = ARMOR_START+3, // 4 slots total, e.g. 2-5 (2, 3, 4, 5)
+	INV_START = ARMOR_END+1, // start at next slot after armor, e.g. 6
+	INV_END = INV_START+26, // 27 vanilla inventory slots total (i.e. the first one plus 26 more)
+	HOTBAR_START = INV_END+1, // start at next slot after inventory
+	HOTBAR_END = HOTBAR_START+8; // 9 slots total (i.e. the first one plus 8 more)
 
 	public ContainerCustomPlayer(EntityPlayer player, InventoryPlayer inventoryPlayer, InventoryCustomPlayer inventoryCustom) {
 		int i;

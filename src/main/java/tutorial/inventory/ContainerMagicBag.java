@@ -13,9 +13,12 @@ public class ContainerMagicBag extends Container
 	private final InventoryMagicBag inventory;
 
 	private static final int
-	ARMOR_START = InventoryMagicBag.INV_SIZE, ARMOR_END = ARMOR_START + 3,
-	INV_START = ARMOR_END+1, INV_END = INV_START+26,
-	HOTBAR_START = INV_END+1, HOTBAR_END = HOTBAR_START+8;
+	ARMOR_START = InventoryMagicBag.INV_SIZE, // INV_SIZE = 10, so slots 0 to 9 are the custom inventory, armor starts at the next slot (i.e. 10)
+	ARMOR_END = ARMOR_START+3, // 4 slots total, e.g. 10-13 (10, 11, 12, 13)
+	INV_START = ARMOR_END+1, // start at next slot after armor, e.g. 14
+	INV_END = INV_START+26, // 27 vanilla inventory slots total (i.e. the first one plus 26 more)
+	HOTBAR_START = INV_END+1, // start at next slot after inventory
+	HOTBAR_END = HOTBAR_START+8; // 9 slots total (i.e. the first one plus 8 more)
 
 	public ContainerMagicBag(EntityPlayer player, InventoryPlayer inv, InventoryMagicBag bag)
 	{
