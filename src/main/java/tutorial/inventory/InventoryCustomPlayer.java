@@ -1,99 +1,50 @@
 package tutorial.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import tutorial.item.ItemUseMana;
 
-public class InventoryCustomPlayer implements IInventory
+/**
+ * 
+ * The abstract inventory takes care of most things already, so we only have
+ * a few methods to implement.
+ * 
+ * Additionally, since this inventory may need to be copied (e.g. for persisting
+ * IExtendedEntityProperties class), we will add a copy method.
+ *
+ */
+public class InventoryCustomPlayer extends AbstractInventory
 {
 	/** The name your custom inventory will display in the GUI, possibly just "Inventory" */
 	private final String name = "Custom Inventory";
 
 	/** The key used to store and retrieve the inventory from NBT */
-	private final String tagName = "CustomInvTag";
+	private static final String SAVE_KEY = "CustomInvTag";
 
 	/** Define the inventory size here for easy reference */
 	// This is also the place to define which slot is which if you have different types,
 	// for example SLOT_SHIELD = 0, SLOT_AMULET = 1;
 	public static final int INV_SIZE = 2;
 
-	/** Inventory's size must be same as number of slots you add to the Container class */
-	private ItemStack[] inventory = new ItemStack[INV_SIZE];
-
 	public InventoryCustomPlayer() {
-		// don't need anything here!
+		// Make sure to initialize the inventory slots:
+		this.inventory = new ItemStack[INV_SIZE];
 	}
 
 	/**
-	 * Makes this inventory an exact replica of the inventory provided
+	 * Show our custom inventory name
 	 */
-	public void copy(InventoryCustomPlayer inv) {
-		for (int i = 0; i < inv.getSizeInventory(); ++i) {
-			ItemStack stack = inv.getStackInSlot(i);
-			inventory[i] = (stack == null ? null : stack.copy());
-		}
-		markDirty();
-	}
-
-	@Override
-	public int getSizeInventory() {
-		return inventory.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return inventory[slot];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int amount) {
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			if (stack.stackSize > amount) {
-				stack = stack.splitStack(amount);
-				markDirty();
-			} else {
-				setInventorySlotContents(slot, null);
-			}
-		}
-
-		return stack;
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		ItemStack stack = getStackInSlot(slot);
-		setInventorySlotContents(slot, null);
-		return stack;
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventory[slot] = stack;
-		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-			stack.stackSize = getInventoryStackLimit();
-		}
-		markDirty();
-	}
-
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Custom name is already translated, so we return true here
+	 */
 	@Override
 	public boolean hasCustomName() {
-		return name.length() > 0;
-	}
-
-	@Override
-	public IChatComponent getDisplayName() {
-		return new ChatComponentText(name);
+		return true;
 	}
 
 	/**
@@ -105,24 +56,9 @@ public class InventoryCustomPlayer implements IInventory
 	}
 
 	@Override
-	public void markDirty() {
-		for (int i = 0; i < getSizeInventory(); ++i) {
-			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0) {
-				inventory[i] = null;
-			}
-		}
-	}
-
-	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		return true;
 	}
-
-	@Override
-	public void openInventory(EntityPlayer player) {}
-
-	@Override
-	public void closeInventory(EntityPlayer player) {}
 
 	/**
 	 * This method doesn't seem to do what it claims to do, as
@@ -138,48 +74,20 @@ public class InventoryCustomPlayer implements IInventory
 		return stack.getItem() instanceof ItemUseMana;
 	}
 
-	public void writeToNBT(NBTTagCompound compound) {
-		NBTTagList items = new NBTTagList();
-		for (int i = 0; i < getSizeInventory(); ++i) {
-			if (getStackInSlot(i) != null) {
-				NBTTagCompound item = new NBTTagCompound();
-				item.setByte("Slot", (byte) i);
-				getStackInSlot(i).writeToNBT(item);
-				items.appendTag(item);
-			}
+	@Override
+	protected String getNbtKey() {
+		return SAVE_KEY;
+	}
+
+	/**
+	 * Makes this inventory an exact replica of the inventory provided
+	 * (useful, for example, when persisting IExtendedEntityProperties)
+	 */
+	public void copy(AbstractInventory inv) {
+		for (int i = 0; i < inv.getSizeInventory(); ++i) {
+			ItemStack stack = inv.getStackInSlot(i);
+			inventory[i] = (stack == null ? null : stack.copy());
 		}
-
-		compound.setTag(tagName, items);
-	}
-
-	public void readFromNBT(NBTTagCompound compound) {
-		NBTTagList items = compound.getTagList(tagName, compound.getId());
-		for (int i = 0; i < items.tagCount(); ++i) {
-			NBTTagCompound item = items.getCompoundTagAt(i);
-			byte slot = item.getByte("Slot");
-			if (slot >= 0 && slot < getSizeInventory()) {
-				inventory[slot] = ItemStack.loadItemStackFromNBT(item);
-			}
-		}
-	}
-
-	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
-	}
-
-	@Override
-	public void clear() {
-		for (int i = 0; i < inventory.length; ++i) {
-			inventory[i] = null;
-		}
+		markDirty();
 	}
 }
