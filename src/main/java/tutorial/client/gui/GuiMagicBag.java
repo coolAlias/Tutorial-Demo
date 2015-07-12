@@ -41,7 +41,7 @@ public class GuiMagicBag extends GuiContainer
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		String s = inventory.hasCustomName() ? inventory.getName() : I18n.format(inventory.getName());
+		String s = inventory.hasCustomName() ? inventory.getCommandSenderName() : I18n.format(inventory.getCommandSenderName());
 		fontRendererObj.drawString(s, xSize / 2 - fontRendererObj.getStringWidth(s) / 2, 0, 4210752);
 		fontRendererObj.drawString(I18n.format("container.inventory"), 26, ySize - 96 + 4, 4210752);
 	}

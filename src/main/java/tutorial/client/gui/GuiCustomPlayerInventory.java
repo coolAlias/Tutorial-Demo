@@ -66,7 +66,7 @@ public class GuiCustomPlayerInventory extends GuiContainer
 		// if that's not important to you, since we are overriding the default inventory rather than
 		// creating a specific type of inventory
 
-		String s = inventory.hasCustomName() ? inventory.getName() : I18n.format(inventory.getName());
+		String s = inventory.hasCustomName() ? inventory.getCommandSenderName() : I18n.format(inventory.getCommandSenderName());
 		// with the name "Custom Inventory", the 'Cu' will be drawn in the first slot
 		fontRendererObj.drawString(s, xSize - fontRendererObj.getStringWidth(s), 12, 4210752);
 		// this just adds "Inventory" above the player's inventory below

@@ -35,7 +35,7 @@ public class InventoryCustomPlayer extends AbstractInventory
 	 * Show our custom inventory name
 	 */
 	@Override
-	public String getName() {
+	public String getCommandSenderName() {
 		return name;
 	}
 
