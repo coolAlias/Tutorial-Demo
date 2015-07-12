@@ -43,7 +43,7 @@ public final class TutorialMain
 	@SidedProxy(clientSide = "tutorial.ClientProxy", serverSide = "tutorial.CommonProxy")
 	public static CommonProxy proxy;
 
-	public static Logger logger;
+	public static final Logger logger = LogManager.getLogger(MODID);
 
 	/**
 	 * Current recommended version of Networking is to use the SimpleNetworkWrapper class - don't forget to register each packet!
@@ -85,7 +85,6 @@ public final class TutorialMain
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		logger = event.getModLog();
 		logger.info("Beginning pre-initialization");
 		Configuration config = new Configuration(new File(event.getModConfigurationDirectory().getAbsolutePath() + "/Tutorial.cfg"));
 		config.load();
