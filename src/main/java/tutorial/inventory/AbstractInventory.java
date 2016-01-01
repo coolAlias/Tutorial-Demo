@@ -99,7 +99,7 @@ public abstract class AbstractInventory implements IInventory
 	 * Return unlocalized name here, or pre-translated and return true for hasCustomName()
 	 */
 	@Override
-	public String getName() {
+	public String getCommandSenderName() {
 		return "";
 	}
 
@@ -110,7 +110,7 @@ public abstract class AbstractInventory implements IInventory
 
 	@Override
 	public IChatComponent getDisplayName() {
-		return (IChatComponent)(hasCustomName() ? new ChatComponentText(getCommandSenderName()) : new ChatComponentTranslat(getCommandSenderName()));
+		return (IChatComponent)(hasCustomName() ? new ChatComponentText(getCommandSenderName()) : new ChatComponentTranslation(getCommandSenderName()));
 	}
 
 	/**
