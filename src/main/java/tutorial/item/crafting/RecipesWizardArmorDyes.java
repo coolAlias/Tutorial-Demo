@@ -17,7 +17,7 @@ public class RecipesWizardArmorDyes implements IRecipe
 	@Override
 	public boolean matches(InventoryCrafting crafting, World world) {
 		ItemStack itemstack = null;
-		ArrayList arraylist = new ArrayList();
+		ArrayList<ItemStack> arraylist = new ArrayList<ItemStack>();
 		for (int i = 0; i < crafting.getSizeInventory(); ++i) {
 			ItemStack itemstack1 = crafting.getStackInSlot(i);
 			if (itemstack1 != null) {

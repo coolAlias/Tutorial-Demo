@@ -42,7 +42,7 @@ public class ItemMagicBag extends BaseModItem
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean advanced) {
 		list.add(EnumChatFormatting.ITALIC + "A magic bag that holds many items");
 	}
 }

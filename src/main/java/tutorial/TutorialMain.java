@@ -93,18 +93,9 @@ public final class TutorialMain
 		config.save();
 
 		// Initialize and register all blocks, items, and entities
-		magicBag = GameRegistry.registerItem((new ItemMagicBag().setUnlocalizedName("magic_bag")), "magic_bag", null);
-		useMana = GameRegistry.registerItem((new ItemUseMana().setUnlocalizedName("use_mana")), "use_mana", null);
-		throwingRock = GameRegistry.registerItem((new ItemThrowingRock().setUnlocalizedName("throwing_rock")), "throwing_rock", null);
+		initItems();
+		registerItems();
 		EntityRegistry.registerModEntity(EntityThrowingRock.class, "Throwing Rock", ++modEntityIndex, this, 64, 10, true);
-		wabbajack = GameRegistry.registerItem((new ItemWabbajack().setUnlocalizedName("wabbajack")), "wabbajack", null);
-
-		if (wizardArmorFlag) {
-			wizardHat = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 0).setUnlocalizedName("wizard_helmet")), "wizard_helmet", null);
-			wizardRobe = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 1).setUnlocalizedName("wizard_chestplate")), "wizard_chestplate", null);
-			wizardPants = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 2).setUnlocalizedName("wizard_leggings")), "wizard_leggings", null);
-			wizardBoots = GameRegistry.registerItem((new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 3).setUnlocalizedName("wizard_boots")), "wizard_boots", null);
-		}
 
 		// Remember to register your packets! This applies whether or not you used a
 		// custom class or direct implementation of SimpleNetworkWrapper
@@ -136,5 +127,37 @@ public final class TutorialMain
 	@Mod.EventHandler
 	public void postInitialise(FMLPostInitializationEvent event) {
 		// this is generally a good place to modify recipes or otherwise interact with other mods
+	}
+
+	/**
+	 * Initialize all mod Items - make sure to set the registry name for each one!
+	 */
+	private void initItems() {
+		magicBag = new ItemMagicBag().setRegistryName(MODID, "magic_bag").setUnlocalizedName("magic_bag");
+		useMana = new ItemUseMana().setRegistryName(MODID, "use_mana").setUnlocalizedName("use_mana");
+		throwingRock = new ItemThrowingRock().setRegistryName(MODID, "throwing_rock").setUnlocalizedName("throwing_rock");
+		wabbajack = new ItemWabbajack().setRegistryName(MODID, "wabbajack").setUnlocalizedName("wabbajack");
+		if (wizardArmorFlag) {
+			wizardHat = new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 0).setRegistryName(MODID, "wizard_helmet").setUnlocalizedName("wizard_helmet");
+			wizardRobe = new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 1).setRegistryName(MODID, "wizard_chestplate").setUnlocalizedName("wizard_chestplate");
+			wizardPants = new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 2).setRegistryName(MODID, "wizard_leggings").setUnlocalizedName("wizard_leggings");
+			wizardBoots = new ItemWizardArmor(armorWool, proxy.addArmor("wizard"), 3).setRegistryName(MODID, "wizard_boots").setUnlocalizedName("wizard_boots");
+		}
+	}
+
+	/**
+	 * Registers all mod items
+	 */
+	private void registerItems() {
+		GameRegistry.registerItem(magicBag);
+		GameRegistry.registerItem(useMana);
+		GameRegistry.registerItem(throwingRock);
+		GameRegistry.registerItem(wabbajack);
+		if (wizardArmorFlag) {
+			GameRegistry.registerItem(wizardHat);
+			GameRegistry.registerItem(wizardRobe);
+			GameRegistry.registerItem(wizardPants);
+			GameRegistry.registerItem(wizardBoots);
+		}
 	}
 }
