@@ -82,7 +82,7 @@ public class RecipesWizardArmorDyes implements IRecipe
 						return null;
 					}
 
-					float[] afloat = EntitySheep.func_175513_a(EnumDyeColor.byDyeDamage(itemstack1.getMetadata()));
+					float[] afloat = EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(itemstack1.getMetadata()));
 					int j1 = (int)(afloat[0] * 255.0F);
 					int k1 = (int)(afloat[1] * 255.0F);
 					i1 = (int)(afloat[2] * 255.0F);

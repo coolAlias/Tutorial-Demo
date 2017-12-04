@@ -28,7 +28,7 @@ public class InventoryMagicBag extends AbstractInventory
 	}
 
 	@Override
-	public String getCommandSenderName() {
+	public String getName() {
 		return name;
 	}
 
