@@ -2,7 +2,6 @@ package tutorial;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -12,6 +11,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import tutorial.client.KeyHandler;
 import tutorial.client.gui.GuiManaBar;
+import tutorial.client.render.ThrowableRenderFactory;
 import tutorial.entity.EntityThrowingRock;
 import tutorial.item.BaseModItem;
 
@@ -27,7 +27,7 @@ public class ClientProxy extends CommonProxy
 		((BaseModItem) TutorialMain.throwingRock).registerRenderer(mesher);
 		((BaseModItem) TutorialMain.useMana).registerRenderer(mesher);
 		((BaseModItem) TutorialMain.wabbajack).registerRenderer(mesher);
-		
+
 		// If render registration isn't implemented in the class, it has to be done manually:
 		if (TutorialMain.wizardArmorFlag) {
 			// None of these have subtypes, so can be registered with just one damage value
@@ -37,10 +37,7 @@ public class ClientProxy extends CommonProxy
 			registerItemRenderer(mesher, TutorialMain.wizardBoots);
 		}
 
-		RenderingRegistry.registerEntityRenderingHandler(EntityThrowingRock.class,
-				new RenderSnowball(mc.getRenderManager(), TutorialMain.throwingRock, mc.getRenderItem()));
-		
-		// can register other client-side only things here, too:
+		RenderingRegistry.registerEntityRenderingHandler(EntityThrowingRock.class, new ThrowableRenderFactory<EntityThrowingRock>(TutorialMain.throwingRock));
 
 		// can register other client-side only things here, too:
 		// Register our various event handlers - there is only one event bus now
