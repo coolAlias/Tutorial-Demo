@@ -1,11 +1,11 @@
 package tutorial;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.IThreadListener;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -20,21 +20,20 @@ public class ClientProxy extends CommonProxy
 	private final Minecraft mc = Minecraft.getMinecraft();
 
 	@Override
-	public void registerRenderers() {
-		ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();
+	public void preInit() {
 		// For my BaseModItems, I let the Item itself handle registration:
-		((BaseModItem) TutorialMain.magicBag).registerRenderer(mesher);
-		((BaseModItem) TutorialMain.throwingRock).registerRenderer(mesher);
-		((BaseModItem) TutorialMain.useMana).registerRenderer(mesher);
-		((BaseModItem) TutorialMain.wabbajack).registerRenderer(mesher);
+		((BaseModItem) TutorialMain.magicBag).registerResources();
+		((BaseModItem) TutorialMain.throwingRock).registerResources();
+		((BaseModItem) TutorialMain.useMana).registerResources();
+		((BaseModItem) TutorialMain.wabbajack).registerResources();
 
 		// If render registration isn't implemented in the class, it has to be done manually:
 		if (TutorialMain.wizardArmorFlag) {
 			// None of these have subtypes, so can be registered with just one damage value
-			registerItemRenderer(mesher, TutorialMain.wizardHat);
-			registerItemRenderer(mesher, TutorialMain.wizardRobe);
-			registerItemRenderer(mesher, TutorialMain.wizardPants);
-			registerItemRenderer(mesher, TutorialMain.wizardBoots);
+			registerItemRenderer(TutorialMain.wizardHat);
+			registerItemRenderer(TutorialMain.wizardRobe);
+			registerItemRenderer(TutorialMain.wizardPants);
+			registerItemRenderer(TutorialMain.wizardBoots);
 		}
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityThrowingRock.class, new ThrowableRenderFactory<EntityThrowingRock>(TutorialMain.throwingRock));
@@ -48,18 +47,18 @@ public class ClientProxy extends CommonProxy
 	/**
 	 * Registers an item with no subtypes using the unlocalized name as the texture name
 	 */
-	private void registerItemRenderer(ItemModelMesher mesher, Item item) {
-		registerItemRenderer(mesher, item, 0);
+	private void registerItemRenderer(Item item) {
+		registerItemRenderer(item, 0);
 	}
 
 	/**
 	 * Registers a specific item subtype using the unlocalized name as the texture name
 	 * @param meta	Always 0 if only one type, otherwise the subtype's metadata value
 	 */
-	private void registerItemRenderer(ItemModelMesher mesher, Item item, int meta) {
+	private void registerItemRenderer(Item item, int meta) {
 		String name = item.getUnlocalizedName();
 		name = TutorialMain.MODID + ":" + name.substring(name.lastIndexOf(".") + 1);
-		registerItemRenderer(mesher, item, name, meta);
+		registerItemRenderer(item, name, meta);
 	}
 
 	/**
@@ -67,9 +66,9 @@ public class ClientProxy extends CommonProxy
 	 * @param name	Exact name of the texture file to be used, including the "modid:" prefix
 	 * @param meta	Always 0 if only one type, otherwise the subtype's metadata value
 	 */
-	private void registerItemRenderer(ItemModelMesher mesher, Item item, String name, int meta) {
+	private void registerItemRenderer(Item item, String name, int meta) {
 		TutorialMain.logger.info("Registering renderer for " + name);
-		mesher.register(item, meta, new ModelResourceLocation(name, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name, "inventory"));
 	}
 
 	// Deprecated???

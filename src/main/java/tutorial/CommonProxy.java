@@ -14,7 +14,7 @@ import tutorial.inventory.InventoryMagicBag;
 
 public class CommonProxy implements IGuiHandler
 {
-	public void registerRenderers() {}
+	public void preInit() {}
 
 	public int addArmor(String string) {
 		return 0;

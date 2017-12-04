@@ -97,6 +97,9 @@ public final class TutorialMain
 		registerItems();
 		EntityRegistry.registerModEntity(EntityThrowingRock.class, "Throwing Rock", ++modEntityIndex, this, 64, 10, true);
 
+		// Register block, item, and entity renderers after they have been initialized
+		proxy.preInit();
+
 		// Remember to register your packets! This applies whether or not you used a
 		// custom class or direct implementation of SimpleNetworkWrapper
 		PacketDispatcher.registerPackets();
@@ -104,11 +107,6 @@ public final class TutorialMain
 
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {
-		// Register block, item, and entity renderers after they have been initialized and
-		// registered in pre-init; however, Minecraft's RenderItem and ModelMesher instances
-		// must also be ready, so we have to register renderers during init, not earlier
-		proxy.registerRenderers();
-
 		// Register our event listener:
 		TutEventHandler events = new TutEventHandler();
 		MinecraftForge.EVENT_BUS.register(events);
